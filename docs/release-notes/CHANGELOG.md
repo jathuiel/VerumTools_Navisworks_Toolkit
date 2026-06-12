@@ -2,6 +2,26 @@
 
 Histórico consolidado da plataforma. Versões anteriores à consolidação referem-se aos projetos de origem.
 
+## [2.2.0] — 2026-06-12 — Isolamento por Source File
+
+> **Snapshot:** `NavisworksToolkit_v2.2.0_src.zip` (193 arquivos · 0,43 MB)
+> SHA-256: `647AE8FA29102E301EF77E402E7DCF825A0C2B604721E3808014E2B3A2E0E6AD`
+> Inclui: código-fonte, docs, assets, config, templates. Exclui: bin/, obj/, Archive/, .vscode/.
+
+Redefinição do delimitador de "nível" no isolamento do **Smart Views**: a fronteira de contexto passa a ser a propriedade **Source File** (Categoria `Item` / Atributo `Source File`) de cada item, e não mais o ancestral comum (LCA) da árvore. Atende ao **modelo consolidado** (1 NWD único), onde a divisão por disciplina/andar vem do arquivo de origem e não coincide com a hierarquia da árvore.
+
+### Alterado
+- `IsolationHandler`: substituída a lógica de LCA (ancestral comum mais profundo) por classificação via Source File. Itens do Selection Set mantêm a aparência original; itens com o **mesmo** Source File recebem *ghost* cinza; itens de **outros** Source Files são ocultados (`SetHidden`).
+- `BuildContext` passa a fazer passada única coletando keep-path, self-set e o conjunto de Source Files do set (`keepSources`); `BuildOffPathSplit` separa o off-path em ocultar/ghost classificando o ramo pelo Source File do nó pai (1 leitura), descendo aos filhos só em nós agregadores sem Source File próprio.
+- Novo helper `SourceFileOf`: lê a propriedade por nome interno (`LcOaNode` + property contendo `SourceFile`), com DisplayName `Source File` como reforço, memoizando num cache por nó (a leitura de `PropertyCategories` marshala COM — custo dominante do módulo).
+- Fallback conservador: sem Source File identificável (`keepSources` vazio), todo o off-path vira *ghost* — nada é ocultado.
+
+### Corrigido
+- Removida a comparação por referência (`a != lca`) do antigo cálculo de LCA, que podia classificar ancestrais incorretamente — a abordagem por Source File torna o ponto obsoleto.
+
+### Pendente
+- Validação manual no Navisworks (a leitura de `Source File` só é verificável com o modelo aberto): conferir `keepSources=[...]` e `toHideCount/toGhostCount` no PerfLog ao isolar um set.
+
 ## [2.1.2] — 2026-06-12 — Ghosting no Smart Views
 
 > **Snapshot:** `NavisworksToolkit_v2.1.2_src.zip`
