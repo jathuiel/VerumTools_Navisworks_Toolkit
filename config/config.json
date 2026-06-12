@@ -1,0 +1,31 @@
+{
+  "$schema-note": "Configuração central da plataforma Navisworks Toolkit. Consumida pelos scripts de build/deploy; o plugin em si não lê este arquivo em runtime (ver config/README.md).",
+  "product": {
+    "name": "Navisworks Toolkit",
+    "assemblyName": "NavisworksToolkit",
+    "version": "2.0.0",
+    "developerId": "VRM"
+  },
+  "paths": {
+    "navisworksSdk": "C:\\Program Files\\Autodesk\\Navisworks Simulate 2026",
+    "pluginInstallDir": "C:\\Program Files\\Autodesk\\Navisworks Simulate 2026\\Plugins\\NavisworksToolkit",
+    "buildOutput": "src\\bin\\Release",
+    "perfLog": "%TEMP%\\AutoViewTool_perf.log"
+  },
+  "featureFlags": {
+    "_comment": "Flags informativos: todos os módulos estão sempre habilitados na DLL atual. Mantidos aqui para futura modularização.",
+    "viewBuilder": true,
+    "modelCleaner": true,
+    "imageExporter": true,
+    "selectionInspector": true,
+    "nativeAttrLab": true,
+    "setColoringRules": true
+  },
+  "legacy": {
+    "_comment": "Valores herdados do App.config do Auto_ViewTool (não eram consumidos em runtime).",
+    "appSettings": {
+      "PluginName": "Auto ViewTool Creator",
+      "Version": "1.0.0"
+    }
+  }
+}

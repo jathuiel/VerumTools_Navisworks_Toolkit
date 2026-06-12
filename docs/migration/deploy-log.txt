@@ -1,0 +1,52 @@
+﻿**********************
+Início da transcrição do Windows PowerShell
+Hora de início: 20260611184923
+Nome de Usuário: AzureAD\JathuielCorrea
+Executar como Usuário: AzureAD\JathuielCorrea
+Nome da Configuração: 
+Computador: LAPTOP-PE0EKHXA (Microsoft Windows NT 10.0.26100.0)
+Aplicativo Host: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\JathuielCorrea\github\01.VerumTools\docs\migration\deploy-elevated.ps1
+ID do Processo: 26720
+PSVersion: 5.1.26100.8115
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8115
+BuildVersion: 10.0.26100.8115
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcrição iniciada, o arquivo de saída é C:\Users\JathuielCorrea\github\01.VerumTools\docs\migration\deploy-log.txt
+Compilando NavisworksToolkit (Release)...
+Restauração concluída (0,5s)
+  NavisworksToolkit êxito (0,2s) → src\bin\Release\NavisworksToolkit.dll
+
+Construir êxito em 0,9s
+
+Saída: C:\Users\JathuielCorrea\github\01.VerumTools\src\bin\Release
+
+Name                      Length
+----                      ------
+ImageExporter_16.png         419
+ImageExporter_32.png         685
+ModelCleaner_16.png          459
+ModelCleaner_32.png          816
+NativeAttrLab_16.png         787
+NativeAttrLab_32.png        1587
+NavisworksToolkit.dll     246272
+NavisworksToolkit.pdb      53348
+SelectionInspector_16.png    787
+SelectionInspector_32.png   1587
+SetColoringRules_16.png      864
+SetColoringRules_32.png     1657
+ViewBuilder_16.png           457
+ViewBuilder_32.png           793
+
+
+
+Instalando em C:\Program Files\Autodesk\Navisworks Simulate 2026\Plugins\NavisworksToolkit...
+Instalado. Reinicie o Navisworks — a tab 'Navisworks Toolkit' aparecerá no ribbon.
+**********************
+Fim da transcrição do Windows PowerShell
+Hora de término: 20260611184925
+**********************

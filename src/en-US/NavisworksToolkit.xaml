@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RibbonControl
+    x:Uid="NavisworksToolkitRibbonControl"
+    xmlns="clr-namespace:Autodesk.Windows;assembly=AdWindows"
+    xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:adwi="clr-namespace:Autodesk.Internal.Windows;assembly=AdWindows"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Autodesk.Navisworks.Gui.Roamer.AIRLook;assembly=navisworks.gui.roamer">
+
+    <!-- Padrão de nomes (UX Standards 2026-06): rótulos comerciais em inglês,
+         curtos e orientados a resultado; os Ids dos comandos são contrato técnico
+         estável e NÃO acompanham renomeações de rótulo. -->
+    <RibbonTab Id="NavisworksToolkitTab" Title="Navisworks Toolkit">
+
+        <!-- ═══════════ Visualization ═══════════ -->
+        <RibbonPanel x:Uid="NavisworksToolkit_VisualizationPanel">
+            <RibbonPanelSource x:Uid="NavisworksToolkit_VisualizationPanelSource"
+                               Title="Visualization">
+                <local:NWRibbonButton x:Uid="NavisworksToolkit_ViewBuilderBtn"
+                                      Id="ViewBuilder" Size="Large" ShowText="True"
+                                      Text="Smart Views" Orientation="Vertical"
+                                      Image="../ViewBuilder_16.png"
+                                      LargeImage="../ViewBuilder_32.png"/>
+                <local:NWRibbonButton x:Uid="NavisworksToolkit_SetColoringRulesBtn"
+                                      Id="SetColoringRules" Size="Large" ShowText="True"
+                                      Text="Visual Sets" Orientation="Vertical"
+                                      Image="../SetColoringRules_16.png"
+                                      LargeImage="../SetColoringRules_32.png"/>
+                <local:NWRibbonButton x:Uid="NavisworksToolkit_ImageExporterBtn"
+                                      Id="ImageExporter" Size="Large" ShowText="True"
+                                      Text="Image Capture" Orientation="Vertical"
+                                      Image="../ImageExporter_16.png"
+                                      LargeImage="../ImageExporter_32.png"/>
+            </RibbonPanelSource>
+        </RibbonPanel>
+
+        <!-- ═══════════ Selection ═══════════ -->
+        <RibbonPanel x:Uid="NavisworksToolkit_SelectionPanel">
+            <RibbonPanelSource x:Uid="NavisworksToolkit_SelectionPanelSource"
+                               Title="Selection">
+                <local:NWRibbonButton x:Uid="NavisworksToolkit_SelectionInspectorBtn"
+                                      Id="SelectionInspector" Size="Large" ShowText="True"
+                                      Text="Selection Inspector" Orientation="Vertical"
+                                      Image="../SelectionInspector_16.png"
+                                      LargeImage="../SelectionInspector_32.png"/>
+            </RibbonPanelSource>
+        </RibbonPanel>
+
+        <!-- ═══════════ Data ═══════════ -->
+        <RibbonPanel x:Uid="NavisworksToolkit_DataPanel">
+            <RibbonPanelSource x:Uid="NavisworksToolkit_DataPanelSource"
+                               Title="Data">
+                <local:NWRibbonButton x:Uid="NavisworksToolkit_NativeAttrLabBtn"
+                                      Id="NativeAttrLab" Size="Large" ShowText="True"
+                                      Text="Property Explorer" Orientation="Vertical"
+                                      Image="../NativeAttrLab_16.png"
+                                      LargeImage="../NativeAttrLab_32.png"/>
+            </RibbonPanelSource>
+        </RibbonPanel>
+
+        <!-- ═══════════ Model ═══════════ -->
+        <RibbonPanel x:Uid="NavisworksToolkit_ModelPanel">
+            <RibbonPanelSource x:Uid="NavisworksToolkit_ModelPanelSource"
+                               Title="Model">
+                <local:NWRibbonButton x:Uid="NavisworksToolkit_ModelCleanerBtn"
+                                      Id="ModelCleaner" Size="Large" ShowText="True"
+                                      Text="Model Cleanup" Orientation="Vertical"
+                                      Image="../ModelCleaner_16.png"
+                                      LargeImage="../ModelCleaner_32.png"/>
+            </RibbonPanelSource>
+        </RibbonPanel>
+
+    </RibbonTab>
+</RibbonControl>

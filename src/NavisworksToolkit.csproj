@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>NavisworksToolkit</AssemblyName>
+    <RootNamespace>NavisworksToolkit</RootNamespace>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Deterministic>true</Deterministic>
+    <Version>2.1.0</Version>
+    <AssemblyTitle>Navisworks Toolkit</AssemblyTitle>
+    <Product>Navisworks Toolkit</Product>
+    <Company>Verum</Company>
+    <Description>Suíte consolidada de ferramentas para Autodesk Navisworks 2026: viewpoints automáticos, limpeza de modelo, exportação de imagens, inspeção de propriedades, atributos customizados e coloração por sets.</Description>
+    <Copyright>Copyright © 2026</Copyright>
+  </PropertyGroup>
+
+  <!-- Referências da API do Navisworks 2026 (Private=false: o host já as carrega). -->
+  <ItemGroup>
+    <Reference Include="Autodesk.Navisworks.Api">
+      <HintPath>C:\Program Files\Autodesk\Navisworks Simulate 2026\Autodesk.Navisworks.Api.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Autodesk.Navisworks.ComApi">
+      <HintPath>C:\Program Files\Autodesk\Navisworks Simulate 2026\Autodesk.Navisworks.ComApi.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Autodesk.Navisworks.Interop.ComApi">
+      <HintPath>C:\Program Files\Autodesk\Navisworks Simulate 2026\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="AdWindows">
+      <HintPath>C:\Program Files\Autodesk\Navisworks Simulate 2026\AdWindows.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- XlsxFile (leitor/escritor XLSX sem dependências externas) -->
+    <Reference Include="System.IO.Compression" />
+  </ItemGroup>
+
+  <!-- Recursos de marca embutidos na DLL (acessíveis via pack URI em runtime). -->
+  <ItemGroup>
+    <Resource Include="Assets\Icone.png" />
+    <Resource Include="Assets\logo_partners.png" />
+  </ItemGroup>
+
+  <!-- Ribbon layout XAML: o Navisworks procura em en-US\ relativo ao diretório da DLL.
+       NÃO pode ser embutido nem compilado como Page — deve ser arquivo físico. -->
+  <ItemGroup>
+    <Page Remove="en-US\NavisworksToolkit.xaml" />
+    <Content Include="en-US\NavisworksToolkit.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Copia os ícones do ribbon para a raiz do output (junto à DLL),
+       para que o XAML possa referenciá-los com "../NomeIcone.png". -->
+  <Target Name="CopyRibbonIcons" AfterTargets="Build">
+    <ItemGroup>
+      <RibbonIcons Include="Resources\Icons\*.png" />
+    </ItemGroup>
+    <Copy SourceFiles="@(RibbonIcons)" DestinationFolder="$(OutputPath)" />
+  </Target>
+
+</Project>

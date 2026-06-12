@@ -1,0 +1,277 @@
+﻿<Window x:Class="NavisworksToolkit.Modules.SelectionInspector.SelectionInspectorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Selection Inspector"
+        Width="980" Height="640"
+        MinWidth="700" MinHeight="460"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="True"
+        Background="#292929"
+        FontFamily="Segoe UI, San Francisco PRO, Helvetica Neue"
+        UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Ideal">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/NavisworksToolkit;component/UI/DesignSystem.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="ColHeaderTemplate">
+                <StackPanel HorizontalAlignment="Left" Margin="0,2,0,2">
+                    <TextBlock Text="{Binding Category}"
+                               Foreground="{StaticResource Primary}"
+                               FontWeight="SemiBold" FontSize="11"
+                               TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding Property}"
+                               Foreground="{StaticResource Text}"
+                               FontSize="11"
+                               TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <Style x:Key="LinkButton" TargetType="Button">
+                <Setter Property="Background"      Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Foreground"      Value="{StaticResource Primary}"/>
+                <Setter Property="Cursor"          Value="Hand"/>
+                <Setter Property="Padding"         Value="0"/>
+                <Setter Property="FontSize"        Value="12"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <TextBlock Text="{TemplateBinding Content}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       TextDecorations="Underline"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Foreground" Value="{StaticResource CtaHover}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="CatListItem" TargetType="ListBoxItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border x:Name="Bg" Background="Transparent" Padding="10,5">
+                                <CheckBox x:Name="Cb"
+                                          Content="{Binding Name}"
+                                          IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                          Foreground="{StaticResource Text}"
+                                          FontSize="12"
+                                          Cursor="Hand"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bg" Property="Background" Value="{StaticResource RowHover}"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="Bg" Property="Background" Value="{StaticResource RowSelect}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0"
+                Background="{StaticResource Chrome}"
+                BorderBrush="{StaticResource Line}"
+                BorderThickness="0,0,0,1"
+                Padding="20,14">
+            <StackPanel>
+                <TextBlock Text="Selection Inspector"
+                           Foreground="{StaticResource TextLight}"
+                           FontSize="18" FontWeight="Bold"
+                           Margin="0,0,0,3"/>
+                <TextBlock x:Name="TxtSubtitle"
+                           Text="Selecione elementos no modelo para começar."
+                           Foreground="{StaticResource MutedLight}"
+                           FontSize="12"/>
+            </StackPanel>
+        </Border>
+
+        <!-- CONTENT -->
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="230" MinWidth="180"/>
+                <ColumnDefinition Width="1"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- CATEGORIAS (painel esquerdo) -->
+            <Border Grid.Column="0"
+                    Background="{StaticResource Card}"
+                    BorderBrush="{StaticResource Line}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0"
+                            Background="{StaticResource HeaderBg}"
+                            BorderBrush="{StaticResource RowLine}"
+                            BorderThickness="0,0,0,1"
+                            Padding="10,8">
+                        <TextBlock Text="CATEGORIAS"
+                                   Foreground="{StaticResource Muted}"
+                                   FontSize="11" FontWeight="SemiBold"/>
+                    </Border>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,6,10,4">
+                        <Button Content="Selecionar Tudo"
+                                Style="{StaticResource LinkButton}"
+                                Click="BtnSelectAll_Click"/>
+                        <TextBlock Text=" | "
+                                   Foreground="{StaticResource Muted}"
+                                   VerticalAlignment="Center" Margin="4,0"/>
+                        <Button Content="Limpar"
+                                Style="{StaticResource LinkButton}"
+                                Click="BtnClearAll_Click"/>
+                    </StackPanel>
+
+                    <ListBox x:Name="CategoriesList"
+                             Grid.Row="2"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             ItemContainerStyle="{StaticResource CatListItem}"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             SelectionMode="Single"/>
+                </Grid>
+            </Border>
+
+            <!-- SEPARADOR -->
+            <Rectangle Grid.Column="1" Fill="{StaticResource Line}" Width="1" Margin="8,0"/>
+
+            <!-- DATAGRID -->
+            <Border Grid.Column="2"
+                    Background="{StaticResource Card}"
+                    BorderBrush="{StaticResource Line}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                <Grid>
+                    <DataGrid x:Name="InspectorGrid"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              CanUserReorderColumns="True"
+                              CanUserResizeColumns="True"
+                              CanUserResizeRows="False"
+                              SelectionMode="Single"
+                              GridLinesVisibility="None"
+                              HeadersVisibility="Column"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              RowBackground="Transparent"
+                              AlternatingRowBackground="Transparent"
+                              ColumnHeaderStyle="{StaticResource DarkDataGridHeader}"
+                              CellStyle="{StaticResource DarkDataGridCell}"
+                              RowStyle="{StaticResource DarkDataGridRow}"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              VirtualizingPanel.IsVirtualizing="True"
+                              VirtualizingPanel.VirtualizationMode="Recycling"
+                              EnableRowVirtualization="True"/>
+
+                    <TextBlock x:Name="TxtEmptyHint"
+                               Text="Marque categorias à esquerda para visualizar as propriedades."
+                               Foreground="{StaticResource Muted}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="13"
+                               Visibility="Visible"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- FOOTER -->
+        <Border Grid.Row="2"
+                Background="{StaticResource Chrome}"
+                BorderBrush="{StaticResource Line}"
+                BorderThickness="0,1,0,0"
+                Padding="20,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Ellipse x:Name="StatusIndicator"
+                         Grid.Column="0"
+                         Width="8" Height="8"
+                         Fill="{StaticResource Primary}"
+                         VerticalAlignment="Center"
+                         Margin="0,0,8,0"/>
+                <TextBlock x:Name="TxtStatus"
+                           Grid.Column="1"
+                           Text="-"
+                           Foreground="{StaticResource MutedLight}"
+                           FontSize="11"
+                           VerticalAlignment="Center"/>
+
+                <Button x:Name="BtnExportCsv"
+                        Grid.Column="3"
+                        Content="CSV"
+                        Style="{StaticResource BtnCta}"
+                        Width="76"
+                        ToolTip="Exportar como CSV"
+                        Click="BtnExportCsv_Click"
+                        IsEnabled="False"/>
+
+                <Button x:Name="BtnExportExcel"
+                        Grid.Column="5"
+                        Content="Excel"
+                        Style="{StaticResource BtnCta}"
+                        Width="76"
+                        ToolTip="Exportar como Excel XML"
+                        Click="BtnExportExcel_Click"
+                        IsEnabled="False"/>
+
+                <Button x:Name="BtnExportClip"
+                        Grid.Column="7"
+                        Content="Copiar Dados"
+                        Style="{StaticResource BtnCta}"
+                        Width="92"
+                        ToolTip="Copiar para área de transferência (TSV)"
+                        Click="BtnExportClip_Click"
+                        IsEnabled="False"/>
+
+                <Button Grid.Column="9"
+                        Content="Fechar"
+                        Style="{StaticResource BtnSecondary}"
+                        Width="76"
+                        Click="BtnClose_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

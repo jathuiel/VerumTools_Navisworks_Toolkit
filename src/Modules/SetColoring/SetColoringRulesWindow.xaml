@@ -1,0 +1,235 @@
+﻿<Window x:Class="NavisworksToolkit.Modules.SetColoring.SetColoringRulesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Visual Sets"
+        Width="860" Height="640"
+        MinWidth="720" MinHeight="480"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="True"
+        Background="#292929"
+        FontFamily="Segoe UI, San Francisco PRO, Helvetica Neue"
+        UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Ideal">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/NavisworksToolkit;component/UI/DesignSystem.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="130"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0"
+                Background="{StaticResource Chrome}"
+                BorderBrush="{StaticResource Line}"
+                BorderThickness="0,0,0,1"
+                Padding="20,14">
+            <StackPanel>
+                <TextBlock Text="Visual Sets"
+                           Foreground="{StaticResource TextLight}"
+                           FontSize="18" FontWeight="Bold"
+                           Margin="0,0,0,3"/>
+                <TextBlock Text="Define cores e transparências aplicadas por Selection Set do modelo."
+                           Foreground="{StaticResource MutedLight}"
+                           FontSize="12"/>
+            </StackPanel>
+        </Border>
+
+        <!-- TOOLBAR -->
+        <Border Grid.Row="1"
+                Background="{StaticResource Chrome}"
+                BorderBrush="{StaticResource Line}"
+                BorderThickness="0,0,0,1"
+                Padding="20,10">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Carregar Sets"
+                        Command="{Binding LoadSetsCommand}"
+                        Style="{StaticResource BtnCta}"
+                        Margin="0,0,8,0"/>
+                <Button Content="Importar XML"
+                        Command="{Binding ImportXmlCommand}"
+                        Style="{StaticResource BtnSecondary}"
+                        Margin="0,0,8,0"/>
+                <Button Content="Exportar XML"
+                        Command="{Binding ExportXmlCommand}"
+                        Style="{StaticResource BtnSecondary}"
+                        Margin="0,0,8,0"/>
+                <Button Content="Randomizar Cores"
+                        Style="{StaticResource BtnSecondary}"
+                        Margin="0,0,8,0"
+                        Click="BtnRandomColors_Click"/>
+                <Button Content="Marcar Todos"
+                        Style="{StaticResource BtnSecondary}"
+                        Margin="0,0,8,0"
+                        Click="BtnEnableAll_Click"/>
+                <Button Content="Limpar Marcações"
+                        Style="{StaticResource BtnSecondary}"
+                        Click="BtnDisableAll_Click"/>
+                <TextBlock Text="Processando..."
+                           Foreground="{StaticResource MutedLight}"
+                           FontSize="11"
+                           VerticalAlignment="Center"
+                           Margin="16,0,0,0"
+                           Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- DATAGRID -->
+        <Border Grid.Row="2" Margin="20,12,20,0"
+                Background="{StaticResource Card}"
+                BorderBrush="{StaticResource Line}"
+                BorderThickness="1"
+                CornerRadius="8">
+            <DataGrid x:Name="RulesGrid"
+                      ItemsSource="{Binding ColoringRules}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      IsReadOnly="False"
+                      SelectionUnit="FullRow"
+                      SelectionMode="Single"
+                      Background="Transparent"
+                      BorderThickness="0"
+                      RowBackground="Transparent"
+                      AlternatingRowBackground="Transparent"
+                      GridLinesVisibility="None"
+                      HeadersVisibility="Column"
+                      ColumnHeaderStyle="{StaticResource DarkDataGridHeader}"
+                      CellStyle="{StaticResource DarkDataGridCell}"
+                      RowStyle="{StaticResource DarkDataGridRow}"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      VirtualizingPanel.IsVirtualizing="True">
+
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Header="Ativo"
+                                            Binding="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                                            Width="56"/>
+
+                    <DataGridTextColumn Header="Nome do Set"
+                                        Binding="{Binding SelectionSetName, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="*"
+                                        IsReadOnly="False"/>
+
+                    <DataGridTemplateColumn Header="Cor" Width="90">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Tag="{Binding}"
+                                        Click="ColorCell_Click"
+                                        ToolTip="{Binding HexColor}"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Cursor="Hand"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"
+                                        Padding="6,2">
+                                    <Rectangle Width="52" Height="18"
+                                               Fill="{Binding PreviewBrush}"
+                                               RadiusX="3" RadiusY="3"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn Header="Transp. %"
+                                        Binding="{Binding Transparency, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="80"/>
+
+                    <DataGridTextColumn Header="Elementos"
+                                        Binding="{Binding ElementCount}"
+                                        Width="84"
+                                        IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- ACTION BAR -->
+        <Border Grid.Row="3"
+                Background="{StaticResource Chrome}"
+                BorderBrush="{StaticResource Line}"
+                BorderThickness="0,1,0,0"
+                Padding="20,12"
+                Margin="0,12,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="{Binding StatusText}"
+                           Foreground="{StaticResource MutedLight}"
+                           FontSize="11"
+                           VerticalAlignment="Center"/>
+
+                <Button Grid.Column="1"
+                        Content="Aplicar Cores"
+                        Command="{Binding ApplyColoringCommand}"
+                        Style="{StaticResource BtnCta}"
+                        Width="110"/>
+
+                <Button Grid.Column="3"
+                        Content="Remover Cores"
+                        Command="{Binding RemoveColoringCommand}"
+                        Style="{StaticResource BtnDanger}"
+                        Width="110"/>
+
+                <Button Grid.Column="5"
+                        Content="Fechar"
+                        Style="{StaticResource BtnSecondary}"
+                        Width="76"
+                        Click="BtnClose_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- LOG -->
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
+                    Background="{StaticResource Chrome}"
+                    BorderBrush="{StaticResource Line}"
+                    BorderThickness="0,0,0,1"
+                    Padding="20,6">
+                <TextBlock Text="LOG"
+                           Foreground="{StaticResource MutedLight}"
+                           FontSize="11" FontWeight="SemiBold"/>
+            </Border>
+
+            <ScrollViewer Grid.Row="1"
+                          x:Name="LogScrollViewer"
+                          VerticalScrollBarVisibility="Auto"
+                          Background="{StaticResource Bg}">
+                <TextBox Text="{Binding Log, Mode=OneWay}"
+                         IsReadOnly="True"
+                         TextWrapping="Wrap"
+                         FontFamily="Cascadia Mono, Consolas"
+                         FontSize="11"
+                         BorderThickness="0"
+                         Background="Transparent"
+                         Foreground="{StaticResource TextLight}"
+                         Padding="20,8"
+                         VerticalAlignment="Stretch"/>
+            </ScrollViewer>
+        </Grid>
+
+    </Grid>
+</Window>

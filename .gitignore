@@ -1,0 +1,14 @@
+# Build outputs
+src/bin/
+src/obj/
+
+# Visual Studio / IDE
+.vs/
+.vscode/
+*.user
+
+# Zip snapshots (gerados por script, não versionados)
+*.zip
+
+# Archive dos projetos originais (backups, não código ativo)
+Archive/
