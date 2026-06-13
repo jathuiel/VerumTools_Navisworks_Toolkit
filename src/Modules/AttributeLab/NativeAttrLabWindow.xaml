@@ -33,15 +33,27 @@
                 BorderBrush="{StaticResource Line}"
                 BorderThickness="0,0,0,1"
                 Padding="20,14">
-            <StackPanel>
-                <TextBlock Text="Property Explorer"
-                           Foreground="{StaticResource TextLight}"
-                           FontSize="18" FontWeight="Bold"
-                           Margin="0,0,0,3"/>
-                <TextBlock Text="Escreva atributos por seleção, inclua nomes de sets e valide o resultado."
-                           Foreground="{StaticResource MutedLight}"
-                           FontSize="12"/>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>  <!-- barra de acento  -->
+                    <ColumnDefinition Width="*"/>      <!-- títulos          -->
+                    <ColumnDefinition Width="Auto"/>  <!-- logo (canto dir.) -->
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Width="4" CornerRadius="2"
+                        Background="{StaticResource Primary}" Margin="0,2,14,2"/>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="Property Explorer"
+                               Foreground="{StaticResource TextLight}"
+                               FontSize="18" FontWeight="Bold"
+                               Margin="0,0,0,3"/>
+                    <TextBlock Text="Escreva atributos por seleção, inclua nomes de sets e valide o resultado."
+                               Foreground="{StaticResource MutedLight}"
+                               FontSize="12"/>
+                </StackPanel>
+                <Image Grid.Column="2" x:Name="PartnersLogo" Height="86" Stretch="Uniform"
+                       VerticalAlignment="Center" Margin="16,0,0,0"
+                       RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True"/>
+            </Grid>
         </Border>
 
         <!-- CONTENT -->
@@ -478,17 +490,21 @@
                 BorderBrush="{StaticResource Line}"
                 BorderThickness="0,1,0,0"
                 Padding="20,10">
-            <StackPanel Orientation="Horizontal">
-                <Ellipse Width="8" Height="8"
+            <DockPanel LastChildFill="False">
+                <Ellipse DockPanel.Dock="Left" Width="8" Height="8"
                          Fill="{StaticResource Primary}"
                          VerticalAlignment="Center"
                          Margin="0,0,8,0"/>
-                <TextBlock x:Name="FooterStatus"
+                <TextBlock DockPanel.Dock="Left" x:Name="FooterStatus"
                            Foreground="{StaticResource MutedLight}"
                            FontSize="11"
                            VerticalAlignment="Center"
                            Text="Aguardando seleção no modelo..."/>
-            </StackPanel>
+                <TextBlock DockPanel.Dock="Right" x:Name="VersionText" Text=""
+                           Foreground="{StaticResource MutedLight}"
+                           FontSize="11" Opacity="0.85"
+                           VerticalAlignment="Center"/>
+            </DockPanel>
         </Border>
     </Grid>
 </Window>

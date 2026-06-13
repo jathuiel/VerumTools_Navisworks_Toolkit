@@ -13,7 +13,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/NavisworksToolkit;component/UI/Theme.xaml"/>
+                <ResourceDictionary Source="/NavisworksToolkit;component/UI/DesignSystem.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -230,6 +230,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Ellipse Grid.Column="0" Width="8" Height="8" Fill="{StaticResource Primary}"
                              VerticalAlignment="Center" Margin="0,0,10,0"/>
@@ -240,6 +241,9 @@
                                Foreground="{StaticResource Primary}" FontSize="12"
                                FontWeight="SemiBold" FontFamily="Cascadia Mono, Consolas"
                                VerticalAlignment="Center" Margin="12,0,0,0"/>
+                    <TextBlock Grid.Column="3" x:Name="VersionText" Text=""
+                               Foreground="{StaticResource MutedLight}" FontSize="11" Opacity="0.85"
+                               VerticalAlignment="Center" Margin="14,0,0,0"/>
                 </Grid>
                 <ProgressBar Grid.Row="1" x:Name="OperationProgress"
                              Style="{StaticResource ProgressDark}"

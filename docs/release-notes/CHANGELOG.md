@@ -2,6 +2,29 @@
 
 Histórico consolidado da plataforma. Versões anteriores à consolidação referem-se aos projetos de origem.
 
+## [2.3.0] — 2026-06-13 — Opções de geração de vistas, identidade visual e versão nas janelas
+
+> **Snapshot:** `NavisworksToolkit_v2.3.0_src.zip` (152 arquivos · 0,41 MB)
+> SHA-256: `92D4261AEA433023A65F87C7DE7F800DAE586A21DEF13B6FA592EC8E7ECB37DB`
+> Inclui: código-fonte, docs, assets, config, templates. Exclui: bin/, obj/, Archive/, .vscode/.
+
+Nova etapa de **opções na geração de viewpoints** do Smart Views, revisão completa da **identidade visual** das seis janelas (ícones, logotipo e cores) e exibição da **versão do plugin** no rodapé de cada janela.
+
+### Adicionado
+- **Smart Views — opções de geração de vistas**: diálogo para escolher o **modo de isolamento** (`Apenas itens do set`, que oculta todo o resto, ou `Nível por Source File`, com *ghosting* cinza no mesmo Source File — padrão histórico), a **projeção da câmera** (Ortográfica ou Perspectiva) e uma ou mais **orientações** por Selection Set (Isométrica, Topo, Frente, Trás, Esquerda, Direita) — cada orientação marcada gera um viewpoint independente. Novos `ViewGenerationOptions` / `IsolationMode.SetItemsOnly` / `CameraProjectionMode` / `ViewOrientation`; ajustes em `IsolationHandler`, `ViewpointManager` e `MainWindow`.
+- **Versão no rodapé** das 6 janelas (`v2.3.0`), lida da assembly em runtime por `UiCommon.VersionLabel` e aplicada automaticamente por `ApplyBranding` (TextBlock `VersionText`). Acompanha a versão do `.csproj` sem manutenção manual.
+- **Novo conjunto de 6 ícones de ribbon** próprios (glifos sólidos, *ink* `#292929` + acento `#FC6A0A`), desenhados para legibilidade em 16/32 px: câmera (Smart Views), chips de cor (Visual Sets), foto montanha+sol (Image Capture), *marquee* + cursor (Selection Inspector), card de propriedades (Property Explorer), lixeira (Model Cleanup).
+- **Tokens semânticos de status** no design system (`StatusInfo`, `StatusSuccess`, `StatusWarning`, `StatusError`), alinhados à paleta da marca — *Success* em verde sóbrio (`#4E8A57`) é a única exceção funcional, como o *Danger* já era.
+
+### Alterado
+- **Logo padronizada** no header das 6 janelas (canto superior direito, `Height=86`): antes presente em apenas 3 (Smart Views, Image Capture, Model Cleanup); Property Explorer, Selection Inspector e Visual Sets ganharam header com barra de acento + logo via `ApplyBranding`.
+- **Design system consolidado** em fonte canônica única `DesignSystem.xaml`: `SearchBox`, `ClearBtn` e os estilos default de `ListView`/`GridView` migrados do antigo `Theme.xaml`; `ExportWindow` e `CleanupWindow` reapontados. `MainWindow` (Smart Views) mantém estilos inline por estabilidade.
+- **Ícones unificados**: substituídos os antigos (3 estilos misturados — *badges* 3D, flat coloridos e outline P&B, com 2 deles visualmente idênticos) por um conjunto coeso e na identidade da marca.
+- **Indicador de status** do Selection Inspector: cores Material *hardcoded* (`#2E7D32`, `#0288D1`, `#ED6C02`, `#D32F2F`) substituídas pelos tokens de marca.
+
+### Removido
+- `src/UI/Theme.xaml` — consolidado em `DesignSystem.xaml`. Referências (`ExportWindow`, `CleanupWindow`) e a documentação `THEME_MAP.md` atualizadas.
+
 ## [2.2.0] — 2026-06-12 — Isolamento por Source File
 
 > **Snapshot:** `NavisworksToolkit_v2.2.0_src.zip` (193 arquivos · 0,43 MB)

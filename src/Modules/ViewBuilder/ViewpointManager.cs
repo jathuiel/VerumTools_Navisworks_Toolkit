@@ -31,7 +31,9 @@ namespace NavisworksToolkit.Modules.ViewBuilder
             _document = _interop.GetActiveDocument();
         }
 
-        public ViewpointData CreateViewpointFromSelection(SelectionSetData selectionSet)
+        public ViewpointData CreateViewpointFromSelection(SelectionSetData selectionSet,
+            ViewOrientation orientation = ViewOrientation.Isometric,
+            CameraProjectionMode projection = CameraProjectionMode.Orthographic)
         {
             if (selectionSet == null)
                 throw new ArgumentNullException(nameof(selectionSet));
@@ -42,7 +44,8 @@ namespace NavisworksToolkit.Modules.ViewBuilder
 
             try
             {
-                PerfLog.Info($"--- CreateViewpoint '{selectionSet.Name}' ---");
+                var orientationLabel = ViewGenerationOptions.LabelOf(orientation);
+                PerfLog.Info($"--- CreateViewpoint '{selectionSet.Name}' ({orientationLabel}, {projection}) ---");
 
                 // Extent geométrico real do set (ignoreHidden=false: inclui itens mesmo que
                 // estejam ocultos neste instante). Uma única chamada nativa — sem selecionar.
@@ -53,8 +56,8 @@ namespace NavisworksToolkit.Modules.ViewBuilder
                 // world-up, e só sobrescrevemos projeção/orientação/enquadramento.
                 var viewpoint = PerfLog.Time("CurrentViewpoint.CreateCopy",
                     () => _document.CurrentViewpoint.CreateCopy());
-                PerfLog.TimeVoid("ApplyIsometricCamera",
-                    () => ApplyIsometricCamera(viewpoint, box));
+                PerfLog.TimeVoid("ApplyCamera",
+                    () => ApplyCamera(viewpoint, box, orientation, projection));
 
                 // Aplica a câmera à vista corrente (1 redraw) para que o capture a registre.
                 PerfLog.TimeVoid("CurrentViewpoint.CopyFrom",
@@ -68,10 +71,15 @@ namespace NavisworksToolkit.Modules.ViewBuilder
                 if (savedViewpoint == null)
                     throw new InvalidOperationException("CaptureRuntimeOverrides retornou nulo");
 
-                // Nome vindo do template Excel (se houver); senão, gerado automaticamente.
-                savedViewpoint.DisplayName = !string.IsNullOrWhiteSpace(selectionSet.TemplateViewpointName)
+                // Nome base vindo do template Excel (se houver); senão, gerado automaticamente.
+                // O rótulo da orientação é anexado para diferenciar as múltiplas vistas do
+                // mesmo set (ex.: "Fachada - Frontal", "Fachada - Superior").
+                var baseName = !string.IsNullOrWhiteSpace(selectionSet.TemplateViewpointName)
                     ? selectionSet.TemplateViewpointName
-                    : GenerateViewpointName(selectionSet.Name);
+                    : GenerateViewpointName(selectionSet.Name, orientationLabel);
+                savedViewpoint.DisplayName = !string.IsNullOrWhiteSpace(selectionSet.TemplateViewpointName)
+                    ? $"{baseName} - {orientationLabel}"
+                    : baseName;
 
                 PerfLog.TimeVoid("AddCopy",
                     () => _document.SavedViewpoints.AddCopy(savedViewpoint));
@@ -103,7 +111,8 @@ namespace NavisworksToolkit.Modules.ViewBuilder
                 // Descrição: a do template tem prioridade; senão, a auto-gerada.
                 var description = !string.IsNullOrWhiteSpace(selectionSet.TemplateDescription)
                     ? selectionSet.TemplateDescription
-                    : $"Gerado automaticamente (isométrico) a partir do Selection Set: {selectionSet.Name} " +
+                    : $"Gerado automaticamente (vista {orientationLabel}, {projection}) a partir do " +
+                      $"Selection Set: {selectionSet.Name} " +
                       $"(visibilidade={savedViewpoint.ContainsVisibilityOverrides}, " +
                       $"aparência={savedViewpoint.ContainsAppearanceOverrides})";
 
@@ -143,17 +152,23 @@ namespace NavisworksToolkit.Modules.ViewBuilder
         }
 
         /// <summary>
-        /// Orienta a câmera num ângulo isométrico (projeção ortográfica = isometria
-        /// verdadeira) e enquadra a bounding box do set com <see cref="Viewpoint.ZoomBox"/>.
+        /// Orienta a câmera segundo a <paramref name="orientation"/> escolhida (isométrica ou uma
+        /// das vistas ortogonais), define a <paramref name="projection"/> e enquadra a bounding
+        /// box do set com <see cref="Viewpoint.ZoomBox"/>.
         ///
-        /// A direção é derivada do eixo "up" do modelo, então funciona tanto em modelos
-        /// Z-up (Revit/Civil, o caso comum) quanto Y-up: a câmera fica no canto
-        /// (+h1, +h2, +up) olhando para o centro da caixa.
+        /// Os eixos são derivados do "up" do modelo, então funciona tanto em modelos Z-up
+        /// (Revit/Civil, o caso comum) quanto Y-up. A partir do up, derivamos:
+        ///   • <c>forward</c> (h1) — eixo horizontal "frente/trás" (Y num modelo Z-up);
+        ///   • <c>right</c>        — eixo horizontal "esquerda/direita" (X num modelo Z-up).
+        /// A direção de visada (da câmera para a cena) e o "up" da vista são escolhidos por
+        /// orientação. Pares opostos (Front/Back, Left/Right) são espelhados.
         /// </summary>
-        private static void ApplyIsometricCamera(Viewpoint viewpoint, BoundingBox3D box)
+        private static void ApplyCamera(Viewpoint viewpoint, BoundingBox3D box,
+            ViewOrientation orientation, CameraProjectionMode projection)
         {
-            // Projeção paralela: isométrico de verdade (sem distorção de perspectiva).
-            viewpoint.Projection = ViewpointProjection.Orthographic;
+            viewpoint.Projection = projection == CameraProjectionMode.Perspective
+                ? ViewpointProjection.Perspective
+                : ViewpointProjection.Orthographic;
 
             // Eixo vertical do mundo (com fallback Z-up se o viewpoint não tiver um).
             var up = (viewpoint.HasWorldUpVector
@@ -162,14 +177,34 @@ namespace NavisworksToolkit.Modules.ViewBuilder
 
             // Dois eixos horizontais perpendiculares ao "up".
             var refAxis = Math.Abs(up.Z) < 0.9 ? new Vector3D(0, 0, 1) : new Vector3D(1, 0, 0);
-            var h1 = up.Cross(refAxis).Normalize();
-            var h2 = up.Cross(h1).Normalize();
+            var forward = up.Cross(refAxis).Normalize();   // frente/trás (Y se Z-up)
+            var right = forward.Cross(up).Normalize();      // esquerda/direita (X se Z-up)
 
-            // Direção de visada: câmera no canto superior, olhando "para dentro" da caixa.
-            var direction = h1.Add(h2).Add(up).Negate().Normalize();
+            Vector3D direction, viewUp;
+            switch (orientation)
+            {
+                // Topo: olha para baixo; o "up" da vista é a frente (norte aponta p/ cima no plano).
+                case ViewOrientation.Top:
+                    direction = up.Negate(); viewUp = forward; break;
+                // Frontal: câmera à frente (-forward) olhando para +forward.
+                case ViewOrientation.Front:
+                    direction = forward; viewUp = up; break;
+                case ViewOrientation.Back:
+                    direction = forward.Negate(); viewUp = up; break;
+                // Lateral esquerda: câmera à esquerda olhando para a direita (+right).
+                case ViewOrientation.Left:
+                    direction = right; viewUp = up; break;
+                case ViewOrientation.Right:
+                    direction = right.Negate(); viewUp = up; break;
+                // Isométrica: câmera no canto (+forward,+right,+up) olhando para dentro da caixa.
+                case ViewOrientation.Isometric:
+                default:
+                    direction = forward.Add(right).Add(up).Negate().Normalize();
+                    viewUp = up; break;
+            }
 
             viewpoint.AlignDirection(direction);
-            viewpoint.AlignUp(up);
+            viewpoint.AlignUp(viewUp);
 
             // Guard contra caixa vazia.
             if (box != null && !box.IsEmpty)
@@ -196,12 +231,12 @@ namespace NavisworksToolkit.Modules.ViewBuilder
         // ambiguidade do pt-BR, onde decimal e separador de coordenada são ambos vírgula.
         private static string Fmt(double v) => v.ToString("0.000", CultureInfo.InvariantCulture);
 
-        private string GenerateViewpointName(string selectionSetName)
+        private string GenerateViewpointName(string selectionSetName, string orientationLabel)
         {
-            // Inclui milissegundos: o lote agora é rápido o bastante para criar vários
-            // viewpoints no mesmo segundo (evita nomes colidirem se sets se repetirem).
+            // Inclui orientação + milissegundos: um único set pode gerar várias vistas no mesmo
+            // instante, então o rótulo garante nomes distintos e legíveis por vista.
             var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff");
-            return $"VP_{selectionSetName}_{timestamp}";
+            return $"VP_{selectionSetName}_{orientationLabel}_{timestamp}";
         }
     }
 }

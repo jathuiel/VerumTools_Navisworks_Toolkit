@@ -1,8 +1,9 @@
 # Theme Map — AutoViewTool Plugin WPF
 
 > Documento de referência para reusar o tema em outros projetos WPF do mesmo ecossistema.
-> Fonte canônica: `src/UI/Theme.xaml`. A `MainWindow.xaml` ainda carrega os recursos inline
-> (não migrada por estabilidade). As demais janelas usam `MergedDictionaries`.
+> Fonte canônica única: `src/UI/DesignSystem.xaml` (o antigo `DesignSystem.xaml` foi consolidado
+> nele e removido). A `MainWindow.xaml` ainda carrega os recursos inline (não migrada por
+> estabilidade). As demais 5 janelas usam `MergedDictionaries` apontando para esse dicionário.
 
 ---
 
@@ -173,7 +174,7 @@ Ambos: CornerRadius=6, CaretBrush=Primary, SelectionBrush=Primary.
 
 ### Passo 1 — Copiar o arquivo de tema
 ```
-src/UI/Theme.xaml  →  SeuProjeto/UI/Theme.xaml
+src/UI/DesignSystem.xaml  →  SeuProjeto/UI/DesignSystem.xaml
 ```
 Ajuste o assembly name no Source se necessário.
 
@@ -183,7 +184,7 @@ Ajuste o assembly name no Source se necessário.
 <Application.Resources>
     <ResourceDictionary>
         <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="UI/Theme.xaml"/>
+            <ResourceDictionary Source="UI/DesignSystem.xaml"/>
         </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
 </Application.Resources>
@@ -192,7 +193,7 @@ Ajuste o assembly name no Source se necessário.
 <Window.Resources>
     <ResourceDictionary>
         <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="/SeuAssembly;component/UI/Theme.xaml"/>
+            <ResourceDictionary Source="/SeuAssembly;component/UI/DesignSystem.xaml"/>
         </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
 </Window.Resources>

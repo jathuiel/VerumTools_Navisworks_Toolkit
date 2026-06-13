@@ -95,16 +95,28 @@
                 BorderBrush="{StaticResource Line}"
                 BorderThickness="0,0,0,1"
                 Padding="20,14">
-            <StackPanel>
-                <TextBlock Text="Selection Inspector"
-                           Foreground="{StaticResource TextLight}"
-                           FontSize="18" FontWeight="Bold"
-                           Margin="0,0,0,3"/>
-                <TextBlock x:Name="TxtSubtitle"
-                           Text="Selecione elementos no modelo para começar."
-                           Foreground="{StaticResource MutedLight}"
-                           FontSize="12"/>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>  <!-- barra de acento  -->
+                    <ColumnDefinition Width="*"/>      <!-- títulos          -->
+                    <ColumnDefinition Width="Auto"/>  <!-- logo (canto dir.) -->
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Width="4" CornerRadius="2"
+                        Background="{StaticResource Primary}" Margin="0,2,14,2"/>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="Selection Inspector"
+                               Foreground="{StaticResource TextLight}"
+                               FontSize="18" FontWeight="Bold"
+                               Margin="0,0,0,3"/>
+                    <TextBlock x:Name="TxtSubtitle"
+                               Text="Selecione elementos no modelo para começar."
+                               Foreground="{StaticResource MutedLight}"
+                               FontSize="12"/>
+                </StackPanel>
+                <Image Grid.Column="2" x:Name="PartnersLogo" Height="86" Stretch="Uniform"
+                       VerticalAlignment="Center" Margin="16,0,0,0"
+                       RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True"/>
+            </Grid>
         </Border>
 
         <!-- CONTENT -->
@@ -229,7 +241,7 @@
                 <Ellipse x:Name="StatusIndicator"
                          Grid.Column="0"
                          Width="8" Height="8"
-                         Fill="{StaticResource Primary}"
+                         Fill="{StaticResource StatusInfo}"
                          VerticalAlignment="Center"
                          Margin="0,0,8,0"/>
                 <TextBlock x:Name="TxtStatus"
@@ -238,6 +250,15 @@
                            Foreground="{StaticResource MutedLight}"
                            FontSize="11"
                            VerticalAlignment="Center"/>
+
+                <TextBlock x:Name="VersionText"
+                           Grid.Column="2"
+                           Text=""
+                           Foreground="{StaticResource MutedLight}"
+                           FontSize="11" Opacity="0.85"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Margin="0,0,14,0"/>
 
                 <Button x:Name="BtnExportCsv"
                         Grid.Column="3"

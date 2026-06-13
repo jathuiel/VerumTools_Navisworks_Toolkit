@@ -30,6 +30,7 @@ namespace NavisworksToolkit.Modules.SelectionInspector
         public SelectionInspectorWindow()
         {
             InitializeComponent();
+            UiCommon.ApplyBranding(this, PartnersLogo);
             CategoriesList.ItemsSource = _categories;
 
             Loaded += async (s, e) =>
@@ -382,13 +383,15 @@ namespace NavisworksToolkit.Modules.SelectionInspector
         private void SetStatus(string message, StatusLevel level)
         {
             TxtStatus.Text = message;
-            StatusIndicator.Fill = level switch
+            // Tokens semânticos do DesignSystem.xaml (alinhados à paleta da marca).
+            var token = level switch
             {
-                StatusLevel.Success => new SolidColorBrush((WpfColor)ColorConverter.ConvertFromString("#2E7D32")),
-                StatusLevel.Warning => new SolidColorBrush((WpfColor)ColorConverter.ConvertFromString("#ED6C02")),
-                StatusLevel.Error => new SolidColorBrush((WpfColor)ColorConverter.ConvertFromString("#D32F2F")),
-                _ => new SolidColorBrush((WpfColor)ColorConverter.ConvertFromString("#0288D1")),
+                StatusLevel.Success => "StatusSuccess",
+                StatusLevel.Warning => "StatusWarning",
+                StatusLevel.Error => "StatusError",
+                _ => "StatusInfo",
             };
+            StatusIndicator.Fill = (TryFindResource(token) as Brush) ?? StatusIndicator.Fill;
         }
     }
 }

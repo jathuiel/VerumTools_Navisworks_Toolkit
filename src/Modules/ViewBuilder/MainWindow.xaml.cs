@@ -35,6 +35,9 @@ namespace NavisworksToolkit.Modules.ViewBuilder
         // esses valores em runtime (suavização exponencial) conforme a máquina/modelo.
         private const double PerSetMs = 21000.0;
         private const double PerItemMs = 0.3;
+        // Custo aproximado por viewpoint capturado (além do isolamento, que é por set). Cada
+        // vista marcada multiplica este custo; calibrado em runtime junto com os demais.
+        private const double PerViewpointMs = 1500.0;
         private double _timeCalibration = 1.0;
 
         public MainWindow(NavisworksInterop interop)
@@ -115,16 +118,30 @@ namespace NavisworksToolkit.Modules.ViewBuilder
                 return;
             }
 
+            // Opções de geração (isolamento, projeção e vistas) escolhidas no painel.
+            var options = BuildOptions();
+            if (options.Orientations.Count == 0)
+            {
+                UiCommon.ShowWarning("Vista necessária",
+                    "Marque ao menos uma vista (Isométrica, Superior, Frontal, Traseira ou Lateral) " +
+                    "na seção VISTAS para gerar viewpoints.");
+                return;
+            }
+
             var failures = new List<string>();
             var created = 0;
             var cancelled = false;
             string lastName = null;
             var total = targets.Count;
+            var orientCount = options.Orientations.Count;
+            var totalVps = total * orientCount;   // 1 viewpoint por (set × vista)
+            var vpsDone = 0;                       // viewpoints concluídos (p/ a barra de progresso)
 
             // Instrumentação temporária: zera o log e cronometra o lote para localizar
             // o gargalo de performance (lido depois em %TEMP%\AutoViewTool_perf.log).
             PerfLog.Reset();
-            PerfLog.Info($"=== Batch start: {total} set(s) ===");
+            PerfLog.Info($"=== Batch start: {total} set(s) × {orientCount} vista(s) = {totalVps} viewpoint(s) " +
+                         $"[isolamento={options.Isolation}, projeção={options.Projection}] ===");
             var batchSw = System.Diagnostics.Stopwatch.StartNew();
 
             // A API Navisworks é STA/single-thread: o trabalho roda no próprio thread da UI.
@@ -133,49 +150,71 @@ namespace NavisworksToolkit.Modules.ViewBuilder
             SetBusy(true);
             try
             {
-                for (var i = 0; i < total; i++)
+                for (var i = 0; i < total && !cancelled; i++)
                 {
                     var set = targets[i];
+                    long isolateMs = 0;
 
-                    // Instrumentação por set: cronometra isolamento e criação do viewpoint
-                    // SEPARADAMENTE (sinais limpos para calibrar PerItemMs vs PerSetMs).
-                    long isolateMs = 0, viewpointMs = 0;
+                    // Fase 1: isolar UMA vez por set (o passo caro). Em seguida capturamos
+                    // todas as vistas marcadas reaproveitando o mesmo estado de visibilidade.
+                    SetProgress(100.0 * (i * orientCount) / totalVps, $"Isolando '{set.Name}' ({i + 1}/{total})...");
+                    await Dispatcher.Yield(DispatcherPriority.Background);
+                    if (_cancelRequested) { cancelled = true; break; }
+
                     try
                     {
-                        // Fase 1/2 do set: isolar (pinta o estado, cede o thread, executa).
-                        SetProgress(100.0 * i / total, $"Isolando '{set.Name}' ({i + 1}/{total})...");
-                        await Dispatcher.Yield(DispatcherPriority.Background);
-                        if (_cancelRequested) { cancelled = true; break; }
-
                         var isoSw = System.Diagnostics.Stopwatch.StartNew();
-                        _isolationHandler.IsolateSelectionSet(set);
+                        _isolationHandler.IsolateSelectionSet(set, options.Isolation);
                         isolateMs = isoSw.ElapsedMilliseconds;
+                    }
+                    catch (Exception exIso)
+                    {
+                        // Falha de isolamento invalida TODAS as vistas deste set: registra e segue.
+                        failures.Add($"• {set.Name}: isolamento falhou — {exIso.Message}");
+                        vpsDone += orientCount;
+                        SetProgress(100.0 * vpsDone / totalVps, null);
+                        PerfLog.Info($"SET items={set.ItemCount,7}  isolate=FALHOU  '{set.Name}'");
+                        continue;
+                    }
 
-                        // Fase 2/2 do set: criar o viewpoint.
-                        SetProgress(100.0 * (i + 0.5) / total, $"Criando viewpoint '{set.Name}' ({i + 1}/{total})...");
+                    // Fase 2: um viewpoint por vista marcada (mesmo isolamento, câmera diferente).
+                    long viewpointMsSum = 0;
+                    for (var v = 0; v < orientCount && !cancelled; v++)
+                    {
+                        var orientation = options.Orientations[v];
+                        var label = ViewGenerationOptions.LabelOf(orientation);
+
+                        SetProgress(100.0 * vpsDone / totalVps,
+                            $"Criando '{set.Name}' · {label} ({vpsDone + 1}/{totalVps})...");
                         await Dispatcher.Yield(DispatcherPriority.Background);
                         if (_cancelRequested) { cancelled = true; break; }
 
-                        var vpSw = System.Diagnostics.Stopwatch.StartNew();
-                        var viewpoint = _viewpointManager.CreateViewpointFromSelection(set);
-                        _viewpointManager.SaveViewpoint(viewpoint);
-                        viewpointMs = vpSw.ElapsedMilliseconds;
+                        try
+                        {
+                            var vpSw = System.Diagnostics.Stopwatch.StartNew();
+                            var viewpoint = _viewpointManager.CreateViewpointFromSelection(
+                                set, orientation, options.Projection);
+                            _viewpointManager.SaveViewpoint(viewpoint);
+                            viewpointMsSum += vpSw.ElapsedMilliseconds;
 
-                        lastName = viewpoint.Name;
-                        created++;
+                            lastName = viewpoint.Name;
+                            created++;
+                        }
+                        catch (Exception exItem)
+                        {
+                            // Uma vista com falha não aborta as demais do set nem o lote.
+                            failures.Add($"• {set.Name} ({label}): {exItem.Message}");
+                        }
+                        finally
+                        {
+                            vpsDone++;
+                            SetProgress(100.0 * vpsDone / totalVps, null);
+                        }
                     }
-                    catch (Exception exItem)
-                    {
-                        // Um set com falha não aborta o lote: registra e segue.
-                        failures.Add($"• {set.Name}: {exItem.Message}");
-                    }
-                    finally
-                    {
-                        // Linha-resumo para calibração: itens, tempo de isolar e de criar VP.
-                        PerfLog.Info($"SET items={set.ItemCount,7}  isolate={isolateMs,6} ms  viewpoint={viewpointMs,6} ms  '{set.Name}'");
-                        // Avança a barra para a fração concluída mesmo se o set falhou.
-                        SetProgress(100.0 * (i + 1) / total, null);
-                    }
+
+                    // Linha-resumo para calibração: itens, tempo de isolar e soma dos viewpoints.
+                    PerfLog.Info($"SET items={set.ItemCount,7}  isolate={isolateMs,6} ms  " +
+                                 $"viewpoints={viewpointMsSum,6} ms ({orientCount} vista(s))  '{set.Name}'");
                 }
 
                 // Mantém 100% visível por um instante (feedback de conclusão) antes de esconder.
@@ -191,12 +230,12 @@ namespace NavisworksToolkit.Modules.ViewBuilder
             }
 
             if (!cancelled)
-                CalibrateTimeEstimate(targets, batchSw.ElapsedMilliseconds);
+                CalibrateTimeEstimate(targets, orientCount, batchSw.ElapsedMilliseconds);
             UpdateStatistics();
 
             if (cancelled)
             {
-                UpdateStatus($"Cancelado — {created} de {total} criado(s)");
+                UpdateStatus($"Cancelado — {created} de {totalVps} criado(s)");
                 if (failures.Count > 0)
                     UiCommon.ShowWarning("Criação interrompida",
                         $"Cancelado pelo usuário.\n{created} criados, {failures.Count} com falha:\n\n{string.Join("\n", failures)}");
@@ -204,9 +243,10 @@ namespace NavisworksToolkit.Modules.ViewBuilder
             else if (failures.Count == 0)
             {
                 UpdateStatus($"{created} viewpoint(s) criado(s)");
-                UiCommon.ShowInfo("Sucesso", targets.Count == 1
+                UiCommon.ShowInfo("Sucesso", totalVps == 1
                     ? $"Viewpoint criado com sucesso:\n{lastName}"
-                    : $"{created} viewpoints criados com sucesso.");
+                    : $"{created} viewpoints criados com sucesso " +
+                      $"({total} set(s) × {orientCount} vista(s)).");
             }
             else
             {
@@ -539,6 +579,62 @@ namespace NavisworksToolkit.Modules.ViewBuilder
         }
 
         /// <summary>
+        /// Lê o painel de configuração (isolamento, projeção e vistas marcadas) num
+        /// <see cref="ViewGenerationOptions"/>. A ordem das vistas segue a do painel.
+        /// </summary>
+        private ViewGenerationOptions BuildOptions()
+        {
+            var options = new ViewGenerationOptions
+            {
+                Isolation = IsoSetOnlyRadio.IsChecked == true
+                    ? IsolationMode.SetItemsOnly
+                    : IsolationMode.SourceFileLevel,
+                Projection = CamPerspRadio.IsChecked == true
+                    ? CameraProjectionMode.Perspective
+                    : CameraProjectionMode.Orthographic
+            };
+
+            if (ViewIsoCheck.IsChecked == true)   options.Orientations.Add(ViewOrientation.Isometric);
+            if (ViewTopCheck.IsChecked == true)   options.Orientations.Add(ViewOrientation.Top);
+            if (ViewFrontCheck.IsChecked == true) options.Orientations.Add(ViewOrientation.Front);
+            if (ViewBackCheck.IsChecked == true)  options.Orientations.Add(ViewOrientation.Back);
+            if (ViewLeftCheck.IsChecked == true)  options.Orientations.Add(ViewOrientation.Left);
+            if (ViewRightCheck.IsChecked == true) options.Orientations.Add(ViewOrientation.Right);
+
+            return options;
+        }
+
+        /// <summary>Quantas vistas estão marcadas (≥0). Usado pela estimativa de tempo.</summary>
+        private int GetSelectedViewCount()
+        {
+            var n = 0;
+            if (ViewIsoCheck?.IsChecked == true)   n++;
+            if (ViewTopCheck?.IsChecked == true)   n++;
+            if (ViewFrontCheck?.IsChecked == true) n++;
+            if (ViewBackCheck?.IsChecked == true)  n++;
+            if (ViewLeftCheck?.IsChecked == true)  n++;
+            if (ViewRightCheck?.IsChecked == true) n++;
+            return n;
+        }
+
+        /// <summary>Recalcula a estimativa quando o usuário marca/desmarca uma vista.</summary>
+        private void ViewOption_Changed(object sender, RoutedEventArgs e) => UpdateEstimatedTime();
+
+        /// <summary>
+        /// Custo bruto (sem calibração) do lote: isolamento por set + um custo por viewpoint
+        /// (set × vista) + um pequeno custo por item. Compartilhado por estimativa e calibração.
+        /// </summary>
+        private static double EstimateBaseMs(IReadOnlyList<SelectionSetData> targets, int viewCount)
+        {
+            long items = 0;
+            foreach (var t in targets)
+                items += Math.Max(0, t.ItemCount);
+
+            var vpCount = targets.Count * Math.Max(1, viewCount);
+            return targets.Count * PerSetMs + vpCount * PerViewpointMs + items * PerItemMs;
+        }
+
+        /// <summary>
         /// Atualiza o rótulo "Tempo est." com o tempo estimado para criar os viewpoints dos
         /// sets atualmente selecionados (custo por set + custo por item × calibração).
         /// </summary>
@@ -548,19 +644,17 @@ namespace NavisworksToolkit.Modules.ViewBuilder
                 return;
 
             var targets = GetTargetSets();
-            if (targets.Count == 0)
+            var views = GetSelectedViewCount();
+            if (targets.Count == 0 || views == 0)
             {
                 EstTimeLabel.Text = "Tempo est.: —";
                 return;
             }
 
-            long items = 0;
-            foreach (var t in targets)
-                items += Math.Max(0, t.ItemCount);
-
-            var ms = (targets.Count * PerSetMs + items * PerItemMs) * _timeCalibration;
+            var ms = EstimateBaseMs(targets, views) * _timeCalibration;
+            var totalVps = targets.Count * views;
             EstTimeLabel.Text =
-                $"Tempo est.: {FormatDuration(ms)} ({targets.Count} set{(targets.Count == 1 ? "" : "s")})";
+                $"Tempo est.: {FormatDuration(ms)} ({totalVps} viewpoint{(totalVps == 1 ? "" : "s")})";
         }
 
         /// <summary>
@@ -568,16 +662,12 @@ namespace NavisworksToolkit.Modules.ViewBuilder
         /// exponencial). Desconta o atraso fixo de conclusão (~400 ms do feedback de 100%)
         /// e limita o fator a [0.2, 5] para não reagir a outliers.
         /// </summary>
-        private void CalibrateTimeEstimate(List<SelectionSetData> processed, long measuredMs)
+        private void CalibrateTimeEstimate(List<SelectionSetData> processed, int viewCount, long measuredMs)
         {
             if (processed == null || processed.Count == 0)
                 return;
 
-            long items = 0;
-            foreach (var t in processed)
-                items += Math.Max(0, t.ItemCount);
-
-            var baseMs = processed.Count * PerSetMs + items * PerItemMs;
+            var baseMs = EstimateBaseMs(processed, viewCount);
             var effective = measuredMs - 400; // remove o Task.Delay de feedback de conclusão
             if (baseMs <= 0 || effective <= 0)
                 return;

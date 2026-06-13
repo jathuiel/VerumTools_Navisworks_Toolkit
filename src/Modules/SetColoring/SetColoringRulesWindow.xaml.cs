@@ -12,6 +12,7 @@ namespace NavisworksToolkit.Modules.SetColoring
         public SetColoringRulesWindow()
         {
             InitializeComponent();
+            UiCommon.ApplyBranding(this, PartnersLogo);
             _viewModel = new SetColoringRulesViewModel();
             DataContext = _viewModel;
 

@@ -32,6 +32,7 @@ namespace NavisworksToolkit.Modules.AttributeLab
         public NativeAttrLabWindow()
         {
             InitializeComponent();
+            UiCommon.ApplyBranding(this, PartnersLogo);
             NativeTree.ItemsSource = _nativeCats;
             LabGrid.ItemsSource = _labEntries;
             SelectionSetsGrid.ItemsSource = _detectedSets;

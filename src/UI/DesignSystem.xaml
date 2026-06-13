@@ -44,6 +44,14 @@
     <SolidColorBrush x:Key="RowHover"   Color="#FC6A0A" Opacity="0.14"/>
     <SolidColorBrush x:Key="RowSelect"  Color="#FC6A0A" Opacity="0.26"/>
 
+    <!-- STATUS (feedback de mensagens) — alinhado à marca. Warning/Error/Info
+         reusam a paleta; Success é a única exceção funcional (verde sóbrio),
+         assim como Danger já é exceção para "perigo". Sem outras cores externas. -->
+    <SolidColorBrush x:Key="StatusInfo"    Color="#585757"/>
+    <SolidColorBrush x:Key="StatusSuccess" Color="#4E8A57"/>
+    <SolidColorBrush x:Key="StatusWarning" Color="#FC6A0A"/>
+    <SolidColorBrush x:Key="StatusError"   Color="#E74504"/>
+
     <!-- ════════════════════════════════════════════════════════
          BOTÕES
          ════════════════════════════════════════════════════════ -->
@@ -338,6 +346,127 @@
         <Setter Property="Height"     Value="6"/>
         <Setter Property="Foreground" Value="{StaticResource Primary}"/>
         <Setter Property="Background" Value="{StaticResource SearchBg}"/>
+    </Style>
+
+    <!-- ════════════════════════════════════════════════════════
+         CAMPO DE BUSCA (SearchBox + ClearBtn) — input com lupa
+         e placeholder. Consolidado do antigo Theme.xaml.
+         ════════════════════════════════════════════════════════ -->
+
+    <Style x:Key="SearchBox" TargetType="TextBox">
+        <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
+        <Setter Property="CaretBrush" Value="{StaticResource Primary}"/>
+        <Setter Property="SelectionBrush" Value="{StaticResource Primary}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Height" Value="36"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="bd" CornerRadius="6"
+                            Background="{StaticResource SearchBg}"
+                            BorderBrush="{StaticResource Line}" BorderThickness="1.5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Path Grid.Column="0" Margin="11,0,8,0" VerticalAlignment="Center"
+                                  Stroke="{StaticResource MutedLight}" StrokeThickness="1.6"
+                                  Data="M7,7 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0 M11,11 L15,15"/>
+                            <TextBlock x:Name="ph" Grid.Column="1" Text="Buscar..."
+                                       Foreground="{StaticResource MutedLight}"
+                                       VerticalAlignment="Center" Margin="2,0,34,0"
+                                       Visibility="Collapsed" IsHitTestVisible="False"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Grid.Column="1"
+                                          Margin="0,0,34,0" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="ph" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource Primary}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ClearBtn" TargetType="Button">
+        <Setter Property="Width" Value="22"/>
+        <Setter Property="Height" Value="22"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="ToolTip" Value="Limpar busca"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="cb" CornerRadius="11" Background="Transparent">
+                        <Path x:Name="xp" HorizontalAlignment="Center" VerticalAlignment="Center"
+                              Data="M6,6 L14,14 M14,6 L6,14"
+                              Stroke="{StaticResource MutedLight}" StrokeThickness="1.6"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="cb" Property="Background" Value="{StaticResource SearchBg}"/>
+                            <Setter TargetName="xp" Property="Stroke" Value="{StaticResource TextLight}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ════════════════════════════════════════════════════════
+         LISTVIEW / GRIDVIEW (estilos default) — usados pelas
+         janelas de lista (Image Capture, Model Cleanup).
+         Consolidado do antigo Theme.xaml.
+         ════════════════════════════════════════════════════════ -->
+
+    <Style TargetType="GridViewColumnHeader">
+        <Setter Property="Foreground" Value="{StaticResource Muted}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="GridViewColumnHeader">
+                    <Border Background="{StaticResource HeaderBg}"
+                            BorderBrush="{StaticResource RowLine}"
+                            BorderThickness="0,0,1,1" Padding="10,8">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ListViewItem">
+        <Setter Property="Foreground" Value="{StaticResource Text}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border x:Name="bd" Background="{TemplateBinding Background}"
+                            BorderBrush="{StaticResource RowLine}" BorderThickness="0,0,0,1"
+                            Padding="2,7">
+                        <GridViewRowPresenter VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{StaticResource RowHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{StaticResource RowSelect}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

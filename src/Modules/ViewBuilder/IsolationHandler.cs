@@ -44,7 +44,8 @@ namespace NavisworksToolkit.Modules.ViewBuilder
             _document = _interop.GetActiveDocument();
         }
 
-        public void IsolateSelectionSet(SelectionSetData selectionSet)
+        public void IsolateSelectionSet(SelectionSetData selectionSet,
+            IsolationMode mode = IsolationMode.SourceFileLevel)
         {
             if (selectionSet == null)
                 throw new ArgumentNullException(nameof(selectionSet));
@@ -55,7 +56,7 @@ namespace NavisworksToolkit.Modules.ViewBuilder
 
             try
             {
-                PerfLog.Info($"--- Isolate '{selectionSet.Name}' (ItemCount={selectionSet.ItemCount}) ---");
+                PerfLog.Info($"--- Isolate '{selectionSet.Name}' (ItemCount={selectionSet.ItemCount}, mode={mode}) ---");
 
                 // Cache de Source File por nó, compartilhado por BuildContext e BuildOffPathSplit:
                 // a leitura de PropertyCategories é a operação mais cara aqui, então cada nó é
@@ -83,10 +84,22 @@ namespace NavisworksToolkit.Modules.ViewBuilder
                 PerfLog.Info($"    keepCount={keep.Count}  selfCount={selfSet.Count}  selfInKeep={selfInKeep}");
                 PerfLog.Info($"    keepSources=[{string.Join(" | ", keepSources)}]");
 
-                var split = PerfLog.Time("BuildOffPathSplit",
-                    () => BuildOffPathSplit(keep, selfSet, keepSources, srcCache));
-                var toHide  = split.ToHide;
-                var toGhost = split.ToGhost;
+                // SetItemsOnly: oculta TODO off-path (sem ghost). SourceFileLevel: divide em
+                // hide (outras origens) e ghost (mesma origem = contexto do nível).
+                List<ModelItem> toHide, toGhost;
+                if (mode == IsolationMode.SetItemsOnly)
+                {
+                    toHide = PerfLog.Time("BuildOffPathHideAll",
+                        () => BuildOffPathHideAll(keep, selfSet));
+                    toGhost = new List<ModelItem>();
+                }
+                else
+                {
+                    var split = PerfLog.Time("BuildOffPathSplit",
+                        () => BuildOffPathSplit(keep, selfSet, keepSources, srcCache));
+                    toHide  = split.ToHide;
+                    toGhost = split.ToGhost;
+                }
                 PerfLog.Info($"    toHideCount={toHide.Count}  toGhostCount={toGhost.Count}");
 
                 using (var txn = _document.BeginTransaction($"Contextualizar '{selectionSet.Name}'"))
@@ -242,6 +255,28 @@ namespace NavisworksToolkit.Modules.ViewBuilder
             }
 
             return (toHide, toGhost);
+        }
+
+        /// <summary>
+        /// Modo "apenas itens do SET": coleta todos os filhos off-path da keep-path para serem
+        /// ocultados, sem distinção de Source File e sem ghosting. Resultado: somente a geometria
+        /// do set (e sua subárvore) permanece visível; todo o resto do modelo some.
+        ///
+        /// Itens do set (<paramref name="selfSet"/>) são pulados: a subárvore deles é preservada.
+        /// Lista (não HashSet): cada filho tem um único pai, logo não há duplicatas.
+        /// </summary>
+        private static List<ModelItem> BuildOffPathHideAll(
+            HashSet<ModelItem> keep, HashSet<ModelItem> selfSet)
+        {
+            var toHide = new List<ModelItem>();
+            foreach (var node in keep)
+            {
+                if (selfSet.Contains(node)) continue;
+                foreach (var child in node.Children)
+                    if (!keep.Contains(child))
+                        toHide.Add(child);
+            }
+            return toHide;
         }
 
         /// <summary>

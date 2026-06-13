@@ -308,6 +308,76 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- ============ RadioButton do painel (escuro, com bolinha laranja) ============ -->
+        <Style x:Key="PanelRadio" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,3,0,3"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Border x:Name="outer" Width="16" Height="16" CornerRadius="8"
+                                    Background="Transparent" BorderThickness="1.5"
+                                    BorderBrush="{StaticResource MutedLight}" VerticalAlignment="Center">
+                                <Ellipse x:Name="dot" Width="8" Height="8"
+                                         Fill="{StaticResource Primary}" Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="outer" Property="BorderBrush" Value="{StaticResource Primary}"/>
+                                <Setter TargetName="dot" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="outer" Property="BorderBrush" Value="{StaticResource Primary}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ============ CheckBox do painel (escuro, com rótulo à direita) ============ -->
+        <Style x:Key="PanelCheck" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,3,0,3"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Border x:Name="box" Width="16" Height="16" CornerRadius="4"
+                                    Background="Transparent" BorderThickness="1.5"
+                                    BorderBrush="{StaticResource MutedLight}" VerticalAlignment="Center">
+                                <Path x:Name="check" Visibility="Collapsed"
+                                      Data="M3,8 L7,12 L13,4"
+                                      Stroke="#292929" StrokeThickness="2"
+                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                      StrokeLineJoin="Round"/>
+                            </Border>
+                            <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="box" Property="Background" Value="{StaticResource Primary}"/>
+                                <Setter TargetName="box" Property="BorderBrush" Value="{StaticResource Primary}"/>
+                                <Setter TargetName="check" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="box" Property="BorderBrush" Value="{StaticResource Primary}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <!-- Root: Grid (3 linhas). Sem Canvas — linhas '*' precisam de um container que
@@ -430,8 +500,57 @@
                 </Border>
             </Grid>
 
-            <!-- Painel de ações -->
-            <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Top">
+            <!-- Painel de ações + configuração (rolável p/ caber em janelas baixas) -->
+            <ScrollViewer Grid.Column="1" Margin="20,0,0,0"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+            <StackPanel VerticalAlignment="Top">
+
+                <!-- ===== Configuração de geração ===== -->
+                <TextBlock Text="ISOLAMENTO" FontWeight="SemiBold" FontSize="11"
+                           Foreground="{StaticResource MutedLight}" Margin="0,0,0,6"/>
+                <RadioButton x:Name="IsoSourceFileRadio" GroupName="Isolation"
+                             Style="{StaticResource PanelRadio}" IsChecked="True"
+                             Content="Até o Source File (com contexto)"
+                             ToolTip="Mantém o nível: ghosting nos elementos do mesmo Source File e oculta os demais."/>
+                <RadioButton x:Name="IsoSetOnlyRadio" GroupName="Isolation"
+                             Style="{StaticResource PanelRadio}"
+                             Content="Apenas itens do SET"
+                             ToolTip="Oculta tudo que não pertence ao set — mostra somente a geometria selecionada."/>
+
+                <TextBlock Text="CÂMERA" FontWeight="SemiBold" FontSize="11"
+                           Foreground="{StaticResource MutedLight}" Margin="0,14,0,6"/>
+                <RadioButton x:Name="CamOrthoRadio" GroupName="Camera"
+                             Style="{StaticResource PanelRadio}" IsChecked="True"
+                             Content="Ortográfica"/>
+                <RadioButton x:Name="CamPerspRadio" GroupName="Camera"
+                             Style="{StaticResource PanelRadio}"
+                             Content="Perspectiva"/>
+
+                <TextBlock Text="VISTAS (1 viewpoint por vista)" FontWeight="SemiBold" FontSize="11"
+                           Foreground="{StaticResource MutedLight}" Margin="0,14,0,6"/>
+                <CheckBox x:Name="ViewIsoCheck" Style="{StaticResource PanelCheck}"
+                          IsChecked="True" Content="Isométrica"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+                <CheckBox x:Name="ViewTopCheck" Style="{StaticResource PanelCheck}"
+                          Content="Vista superior"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+                <CheckBox x:Name="ViewFrontCheck" Style="{StaticResource PanelCheck}"
+                          Content="Vista frontal"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+                <CheckBox x:Name="ViewBackCheck" Style="{StaticResource PanelCheck}"
+                          Content="Vista traseira"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+                <CheckBox x:Name="ViewLeftCheck" Style="{StaticResource PanelCheck}"
+                          Content="Vista lateral esquerda"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+                <CheckBox x:Name="ViewRightCheck" Style="{StaticResource PanelCheck}"
+                          Content="Vista lateral direita"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+
+                <Border Height="1" Background="{StaticResource Line}" Margin="0,16,0,16"/>
+
+                <!-- ===== Ações ===== -->
                 <TextBlock Text="AÇÕES" FontWeight="SemiBold" FontSize="11"
                            Foreground="{StaticResource MutedLight}" Margin="0,0,0,12"/>
 
@@ -470,6 +589,7 @@
                            Foreground="{StaticResource Primary}" FontFamily="Cascadia Mono, Consolas"
                            FontSize="12" Margin="0,6,0,0"/>
             </StackPanel>
+            </ScrollViewer>
         </Grid>
 
         <!-- ===================== Footer ===================== -->
@@ -487,6 +607,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Ellipse Grid.Column="0" Width="8" Height="8" Fill="{StaticResource Primary}"
                              VerticalAlignment="Center" Margin="0,0,10,0"/>
@@ -497,6 +618,9 @@
                                Foreground="{StaticResource Primary}" FontSize="12"
                                FontWeight="SemiBold" FontFamily="Cascadia Mono, Consolas"
                                VerticalAlignment="Center" Margin="12,0,0,0"/>
+                    <TextBlock Grid.Column="3" x:Name="VersionText" Text=""
+                               Foreground="{StaticResource MutedLight}" FontSize="11" Opacity="0.85"
+                               VerticalAlignment="Center" Margin="14,0,0,0"/>
                 </Grid>
 
                 <!-- Barra: largura total (responsiva), oculta quando ocioso -->

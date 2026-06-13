@@ -32,6 +32,24 @@ namespace NavisworksToolkit.Shared
             if (partnersLogo != null)
                 TryLoadImage($"pack://application:,,,/{asm};component/assets/logo_partners.png",
                     bmp => partnersLogo.Source = bmp);
+
+            // Versão no rodapé: preenche qualquer janela que tenha um TextBlock x:Name="VersionText".
+            if (window?.FindName("VersionText") is TextBlock versionText)
+                versionText.Text = VersionLabel;
+        }
+
+        /// <summary>Rótulo de versão do plugin (ex.: "v2.3.0"), lido da assembly em runtime.</summary>
+        public static string VersionLabel
+        {
+            get
+            {
+                try
+                {
+                    var v = typeof(UiCommon).Assembly.GetName().Version;
+                    return v == null ? string.Empty : $"v{v.Major}.{v.Minor}.{v.Build}";
+                }
+                catch { return string.Empty; }
+            }
         }
 
         private static void TryLoadImage(string packUri, Action<BitmapImage> apply)
