@@ -2,7 +2,7 @@
 
 Plataforma unificada de plugins para **Autodesk Navisworks 2026** (Simulate/Manage), resultado da consolidação dos projetos **Auto_ViewTool (Verum Toolkit)** e **SetAtributesToolkit (Construct Sync Toolkit)**. Uma única DLL expõe **seis ferramentas** na tab própria **"Navisworks Toolkit"** do ribbon.
 
-> Versão: **2.3.0** · .NET Framework 4.8 · WPF · x64
+> Versão: **1.0.0** · .NET Framework 4.8 · WPF · x64
 
 ## Ferramentas
 
@@ -63,5 +63,3 @@ Depois **reinicie o Navisworks** — a tab **"Navisworks Toolkit"** aparece no r
 - [Checklist de validação](./docs/migration/VALIDATION_CHECKLIST.md)
 - [Inventário da auditoria](./docs/migration/INVENTORY.md)
 - [Changelog](./docs/release-notes/CHANGELOG.md)
-
-
