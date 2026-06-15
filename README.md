@@ -64,6 +64,4 @@ Depois **reinicie o Navisworks** — a tab **"Navisworks Toolkit"** aparece no r
 - [Inventário da auditoria](./docs/migration/INVENTORY.md)
 - [Changelog](./docs/release-notes/CHANGELOG.md)
 
-## Preservação
 
-Nenhum arquivo dos projetos originais foi excluído ou alterado: as pastas `Auto_ViewTool/` e `SetAtributesToolkit/` foram movidas intactas para `Archive/` (incluindo o histórico git do segundo), e há ainda backup integral verificado (contagem e bytes) em `Archive/ProjectA` e `Archive/ProjectB`. Ver [`Archive/README.md`](./Archive/README.md).
