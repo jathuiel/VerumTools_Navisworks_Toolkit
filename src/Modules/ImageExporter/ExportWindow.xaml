@@ -5,7 +5,7 @@
         Title="Image Capture"
         Height="700" Width="920" MinHeight="540" MinWidth="820"
         WindowStartupLocation="CenterScreen"
-        Background="#292929"
+        Background="#E5E7EB"
         FontFamily="Segoe UI, San Francisco PRO, Helvetica Neue"
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Ideal">
@@ -16,7 +16,7 @@
                 <ResourceDictionary Source="/NavisworksToolkit;component/UI/DesignSystem.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Rótulo de campo (sobre o chrome escuro) -->
+            <!-- Rótulo de campo (sobre o chrome claro) -->
             <Style x:Key="FieldLabel" TargetType="TextBlock">
                 <Setter Property="Foreground" Value="{StaticResource MutedLight}"/>
                 <Setter Property="FontSize" Value="11"/>
@@ -70,7 +70,7 @@
                                         BorderBrush="{StaticResource SlateBorder}" BorderThickness="1.5"
                                         VerticalAlignment="Center">
                                     <Path x:Name="check" Visibility="Collapsed" Data="M4,9 L8,13 L14,5"
-                                          Stroke="#292929" StrokeThickness="2"
+                                          Stroke="{StaticResource TextOnAccent}" StrokeThickness="2"
                                           StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"/>
                                 </Border>
                                 <ContentPresenter VerticalAlignment="Center" Margin="8,0,0,0"
@@ -155,7 +155,7 @@
                 <Border Grid.Row="2" CornerRadius="8" Background="{StaticResource Card}"
                         BorderBrush="{StaticResource Line}" BorderThickness="1">
                     <ListView x:Name="VpsList" Background="Transparent" BorderThickness="0"
-                              Foreground="{StaticResource Text}"
+                              Foreground="{StaticResource Text}" AlternationCount="2"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <ListView.View>
                             <GridView>
@@ -191,7 +191,7 @@
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </Border.Style>
-                                                        <TextBlock Text="duplicado" FontSize="9" FontWeight="Bold" Foreground="#292929"/>
+                                                        <TextBlock Text="duplicado" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextOnAccent}"/>
                                                     </Border>
                                                 </StackPanel>
                                                 <TextBlock Text="{Binding Path}" Foreground="{StaticResource Muted}"
@@ -210,8 +210,10 @@
                            FontFamily="Cascadia Mono, Consolas" Margin="2,8,0,0"/>
             </Grid>
 
-            <!-- Painel de opções -->
-            <StackPanel Grid.Column="2">
+            <!-- Painel de opções (rolável p/ caber em janelas baixas) -->
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
                 <TextBlock Text="OPÇÕES DE EXPORTAÇÃO" FontWeight="SemiBold" FontSize="11"
                            Foreground="{StaticResource MutedLight}" Margin="0,0,0,12"/>
 
@@ -257,6 +259,7 @@
                            Foreground="{StaticResource TextLight}" FontFamily="Cascadia Mono, Consolas"
                            FontSize="12"/>
             </StackPanel>
+            </ScrollViewer>
         </Grid>
 
         <!-- ===================== Ações ===================== -->

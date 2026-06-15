@@ -6,7 +6,7 @@
         MinWidth="700" MinHeight="460"
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="True"
-        Background="#292929"
+        Background="#E5E7EB"
         FontFamily="Segoe UI, San Francisco PRO, Helvetica Neue"
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Ideal">
@@ -197,7 +197,7 @@
                               Background="Transparent"
                               BorderThickness="0"
                               RowBackground="Transparent"
-                              AlternatingRowBackground="Transparent"
+                              AlternationCount="2"
                               ColumnHeaderStyle="{StaticResource DarkDataGridHeader}"
                               CellStyle="{StaticResource DarkDataGridCell}"
                               RowStyle="{StaticResource DarkDataGridRow}"

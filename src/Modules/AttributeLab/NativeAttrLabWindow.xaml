@@ -7,7 +7,7 @@
         MinWidth="900" MinHeight="560"
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="True"
-        Background="#292929"
+        Background="#E5E7EB"
         FontFamily="Segoe UI, San Francisco PRO, Helvetica Neue"
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Ideal">
@@ -108,7 +108,7 @@
                                     <Border Background="{StaticResource Primary}"
                                             CornerRadius="2" Padding="4,1" Margin="0,0,6,0">
                                         <TextBlock Text="CAT"
-                                                   Foreground="#292929"
+                                                   Foreground="{StaticResource TextOnAccent}"
                                                    FontSize="9" FontWeight="Bold"/>
                                     </Border>
                                     <TextBlock Text="{Binding Name}"
@@ -299,7 +299,7 @@
                                       BorderBrush="{StaticResource Line}"
                                       Background="Transparent"
                                       RowBackground="Transparent"
-                                      AlternatingRowBackground="Transparent"
+                                      AlternationCount="2"
                                       ColumnHeaderStyle="{StaticResource DarkDataGridHeader}"
                                       CellStyle="{StaticResource DarkDataGridCell}"
                                       RowStyle="{StaticResource DarkDataGridRow}">
@@ -344,7 +344,7 @@
                                       Background="{StaticResource Card}"
                                       BorderThickness="0"
                                       RowBackground="Transparent"
-                                      AlternatingRowBackground="Transparent"
+                                      AlternationCount="2"
                                       GridLinesVisibility="None"
                                       HeadersVisibility="Column"
                                       ColumnHeaderHeight="32"

@@ -2,7 +2,7 @@
 
 Plataforma unificada de plugins para **Autodesk Navisworks 2026** (Simulate/Manage), resultado da consolidação dos projetos **Auto_ViewTool (Verum Toolkit)** e **SetAtributesToolkit (Construct Sync Toolkit)**. Uma única DLL expõe **seis ferramentas** na tab própria **"Navisworks Toolkit"** do ribbon.
 
-> Versão: **1.0.0** · .NET Framework 4.8 · WPF · x64
+> Versão: **1.0.1** · .NET Framework 4.8 · WPF · x64
 
 ## Ferramentas
 
@@ -27,12 +27,11 @@ src/                         # Código consolidado
 ├── Core/                    # Entry point (CommandHandlerPlugin), ToolLauncher, interop, log
 ├── Shared/                  # Utilitários entre módulos (XlsxFile, helpers, VerumSchema...)
 ├── Modules/                 # Um diretório por ferramenta (6 módulos)
-├── UI/                      # DesignSystem.xaml (paleta de 5 cores + tokens de status)
+├── UI/                      # DesignSystem.xaml (paleta do tema claro + tokens de status)
 ├── Assets/                  # Ícone e logo embutidos na DLL
 ├── Resources/Icons/         # Ícones do ribbon (16/32 px)
 └── en-US/                   # Layout do ribbon (NavisworksToolkit.xaml)
 config/                      # Configuração central (config.json) e documentação
-assets/                      # Identidade visual consolidada (logos, icons, images)
 docs/                        # Documentação consolidada (user/dev guides, arquitetura, specs)
 └── migration/               # Inventário, MigrationReport, checklist e scripts da consolidação
 templates/                   # Template Excel do ViewBuilder

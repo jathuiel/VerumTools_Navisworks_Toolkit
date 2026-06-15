@@ -38,7 +38,7 @@ namespace NavisworksToolkit.Shared
                 versionText.Text = VersionLabel;
         }
 
-        /// <summary>Rótulo de versão do plugin (ex.: "v1.0.0"), lido da assembly em runtime.</summary>
+        /// <summary>Rótulo de versão do plugin (ex.: "v1.0.1"), lido da assembly em runtime.</summary>
         public static string VersionLabel
         {
             get

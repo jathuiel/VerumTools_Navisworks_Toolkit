@@ -5,53 +5,53 @@
         Title="Smart Views" Height="760" Width="820"
         MinHeight="560" MinWidth="680"
         WindowStartupLocation="CenterScreen"
-        Background="#292929"
+        Background="#E5E7EB"
         FontFamily="Segoe UI, San Francisco PRO, Helvetica Neue"
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Ideal">
 
     <!--
-        Tema de 5 cores (paleta restrita) para encaixar na UI do Navisworks 2026.
-        #292929 ink · #585757 gray · #F6F6F6 cream · #FC6A0A orange · #E74504 deep orange.
-
-        Modelo de superfícies (corrige o bug anterior de "claro sobre claro"):
-          • CHROME ESCURO  -> janela, header e footer = #292929; texto claro por cima.
-          • CARD CLARO     -> a lista de Selection Sets = #F6F6F6; texto escuro por cima.
-        Contraste do texto verificado >= 4.5:1 (WCAG AA) em todas as combinações.
-        Acento laranja só como CTA / detalhe sobre superfícies escuras (contraste ~5:1).
-        Variações de tom são feitas por OPACIDADE das 5 cores (sem introduzir uma 6ª).
+        Tema claro corporativo (alinhado ao DesignSystem.xaml).
+        Superfícies: Bg #E5E7EB · Chrome #E0E2E6 · Card #F3F4F6.
+        Texto escuro (#1F2937 / #4B5563) sobre superfícies claras; acento azul #2563EB.
+        Os recursos abaixo são locais a esta janela (mantidos por estabilidade),
+        espelhando os tokens canônicos do DesignSystem.
+        Contraste de texto >= 4.5:1 (WCAG AA) nas combinações principais.
     -->
     <Window.Resources>
 
-        <!-- ===================== Paleta (5 cores) ===================== -->
-        <SolidColorBrush x:Key="Bg"         Color="#292929"/>  <!-- janela                -->
-        <SolidColorBrush x:Key="Chrome"     Color="#292929"/>  <!-- header / footer (dark)-->
-        <SolidColorBrush x:Key="Card"       Color="#F6F6F6"/>  <!-- fundo da lista (claro)-->
-        <SolidColorBrush x:Key="HeaderBg"   Color="#585757" Opacity="0.10"/> <!-- topo grade -->
-        <SolidColorBrush x:Key="Line"       Color="#585757"/>  <!-- bordas / divisores    -->
-        <SolidColorBrush x:Key="RowLine"    Color="#585757" Opacity="0.22"/> <!-- linhas grade -->
-        <SolidColorBrush x:Key="SearchBg"   Color="#585757" Opacity="0.18"/> <!-- campo busca  -->
+        <!-- ===================== Paleta (tema claro) ===================== -->
+        <SolidColorBrush x:Key="Bg"         Color="#E5E7EB"/>  <!-- janela                 -->
+        <SolidColorBrush x:Key="Chrome"     Color="#E0E2E6"/>  <!-- header / footer        -->
+        <SolidColorBrush x:Key="Card"       Color="#F3F4F6"/>  <!-- fundo da lista (card)  -->
+        <SolidColorBrush x:Key="HeaderBg"   Color="#D6D9DE"/>  <!-- topo da grade          -->
+        <SolidColorBrush x:Key="Line"       Color="#C5C9D0"/>  <!-- bordas / divisores     -->
+        <SolidColorBrush x:Key="RowLine"    Color="#C5C9D0" Opacity="0.6"/> <!-- linhas grade -->
+        <SolidColorBrush x:Key="SearchBg"   Color="#F8F9FA"/>  <!-- campo busca            -->
 
-        <SolidColorBrush x:Key="Text"       Color="#292929"/>  <!-- texto sobre claro     -->
-        <SolidColorBrush x:Key="Muted"      Color="#585757"/>  <!-- secundário sobre claro -->
-        <SolidColorBrush x:Key="TextLight"  Color="#F6F6F6"/>  <!-- texto sobre escuro     -->
-        <SolidColorBrush x:Key="MutedLight" Color="#F6F6F6" Opacity="0.70"/> <!-- sec. escuro -->
-        <SolidColorBrush x:Key="Primary"    Color="#FC6A0A"/>  <!-- acento / CTA (laranja) -->
+        <SolidColorBrush x:Key="Text"       Color="#1F2937"/>  <!-- texto principal         -->
+        <SolidColorBrush x:Key="Muted"      Color="#4B5563"/>  <!-- texto secundário        -->
+        <SolidColorBrush x:Key="TextLight"  Color="#1F2937"/>  <!-- texto sobre chrome claro -->
+        <SolidColorBrush x:Key="MutedLight" Color="#4B5563"/>  <!-- secundário sobre chrome  -->
+        <SolidColorBrush x:Key="Primary"    Color="#2563EB"/>  <!-- acento / CTA (azul)      -->
 
-        <!-- Secundário (gray): Import / Generate / Reset -->
-        <SolidColorBrush x:Key="Slate"       Color="#585757"/>
-        <SolidColorBrush x:Key="SlateHover"  Color="#F6F6F6"/>  <!-- inverte p/ claro       -->
-        <SolidColorBrush x:Key="SlatePress"  Color="#1F1F1F"/>
-        <SolidColorBrush x:Key="SlateBorder" Color="#585757"/>
+        <!-- Secundário (neutro): Import / Generate / Reset -->
+        <SolidColorBrush x:Key="Slate"       Color="#E5E7EB"/>
+        <SolidColorBrush x:Key="SlateHover"  Color="#D1D5DB"/>
+        <SolidColorBrush x:Key="SlatePress"  Color="#C5C9D0"/>
+        <SolidColorBrush x:Key="SlateBorder" Color="#C5C9D0"/>
 
-        <!-- CTA (laranja): Create Viewpoint -->
-        <SolidColorBrush x:Key="Cta"         Color="#FC6A0A"/>
-        <SolidColorBrush x:Key="CtaHover"    Color="#E74504"/>
-        <SolidColorBrush x:Key="CtaPress"    Color="#E74504"/>
+        <!-- CTA (azul institucional): Create Viewpoint -->
+        <SolidColorBrush x:Key="Cta"         Color="#2563EB"/>
+        <SolidColorBrush x:Key="CtaHover"    Color="#1D4ED8"/>
+        <SolidColorBrush x:Key="CtaPress"    Color="#1E40AF"/>
 
-        <!-- Hover / seleção da lista (tint laranja sobre o fundo claro) -->
-        <SolidColorBrush x:Key="RowHover"    Color="#FC6A0A" Opacity="0.14"/>
-        <SolidColorBrush x:Key="RowSelect"   Color="#FC6A0A" Opacity="0.26"/>
+        <!-- Hover / seleção da lista (azul suave sobre fundo claro) -->
+        <SolidColorBrush x:Key="RowHover"    Color="#DCEAFE"/>
+        <SolidColorBrush x:Key="RowSelect"   Color="#BFDBFE"/>
+
+        <!-- Texto sobre superfícies de acento (botão primário / erro) -->
+        <SolidColorBrush x:Key="TextOnAccent" Color="#FFFFFF"/>
 
         <!-- ============ Botão base (template arredondado) ============ -->
         <Style x:Key="BtnBase" TargetType="Button">
@@ -88,7 +88,9 @@
         <!-- Secundário (slate) -->
         <Style x:Key="BtnSecondary" TargetType="Button" BasedOn="{StaticResource BtnBase}">
             <Setter Property="Background" Value="{StaticResource Slate}"/>
-            <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource SlateBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
             <Style.Triggers>
                 <!-- hover: inverte (cinza -> cream) para feedback claro sem 6ª cor -->
                 <Trigger Property="IsMouseOver" Value="True">
@@ -102,19 +104,19 @@
             </Style.Triggers>
         </Style>
 
-        <!-- CTA (laranja). Texto escuro (#292929) => bom contraste sobre o laranja. -->
+        <!-- CTA (azul institucional). Texto branco => contraste forte sobre o azul. -->
         <Style x:Key="BtnCta" TargetType="Button" BasedOn="{StaticResource BtnBase}">
             <Setter Property="Background" Value="{StaticResource Cta}"/>
-            <Setter Property="Foreground" Value="#292929"/>
+            <Setter Property="Foreground" Value="{StaticResource TextOnAccent}"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{StaticResource CtaHover}"/>
-                    <Setter Property="Foreground" Value="#F6F6F6"/>
+                    <Setter Property="Foreground" Value="{StaticResource TextOnAccent}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="{StaticResource CtaPress}"/>
-                    <Setter Property="Foreground" Value="#F6F6F6"/>
+                    <Setter Property="Foreground" Value="{StaticResource TextOnAccent}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -227,6 +229,9 @@
                             <GridViewRowPresenter VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter TargetName="bd" Property="Background" Value="{StaticResource RowAlt}"/>
+                            </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="bd" Property="Background" Value="{StaticResource RowHover}"/>
                             </Trigger>
@@ -255,12 +260,12 @@
                                 <!-- marcado -->
                                 <Path x:Name="check" Visibility="Collapsed"
                                       Data="M4,9 L8,13 L14,5"
-                                      Stroke="#292929" StrokeThickness="2"
+                                      Stroke="{StaticResource TextOnAccent}" StrokeThickness="2"
                                       StrokeStartLineCap="Round" StrokeEndLineCap="Round"
                                       StrokeLineJoin="Round"/>
                                 <!-- indeterminado (seleção parcial no cabeçalho) -->
                                 <Rectangle x:Name="dash" Visibility="Collapsed"
-                                           Width="9" Height="2" RadiusX="1" RadiusY="1" Fill="#292929"
+                                           Width="9" Height="2" RadiusX="1" RadiusY="1" Fill="{StaticResource TextOnAccent}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
@@ -357,7 +362,7 @@
                                     BorderBrush="{StaticResource MutedLight}" VerticalAlignment="Center">
                                 <Path x:Name="check" Visibility="Collapsed"
                                       Data="M3,8 L7,12 L13,4"
-                                      Stroke="#292929" StrokeThickness="2"
+                                      Stroke="{StaticResource TextOnAccent}" StrokeThickness="2"
                                       StrokeStartLineCap="Round" StrokeEndLineCap="Round"
                                       StrokeLineJoin="Round"/>
                             </Border>
@@ -451,7 +456,7 @@
                         BorderBrush="{StaticResource Line}" BorderThickness="1">
                     <ListView x:Name="SelectionSetsList"
                               Background="Transparent" BorderThickness="0"
-                              Foreground="{StaticResource Text}"
+                              Foreground="{StaticResource Text}" AlternationCount="2"
                               SelectionChanged="SelectionSetsList_SelectionChanged"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <ListView.View>

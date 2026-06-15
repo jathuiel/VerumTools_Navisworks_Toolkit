@@ -2,6 +2,22 @@
 
 Histórico consolidado da plataforma. Versões anteriores à consolidação referem-se aos projetos de origem.
 
+## [1.0.1] — 2026-06-15 — Identidade visual: tema claro e ícones azuis
+
+Repaginação visual da suíte para o **tema claro corporativo**, aplicada de forma consistente nas 6 janelas.
+
+### Alterado
+- **Design system (tema claro)** em `DesignSystem.xaml` e nas 6 janelas: superfícies claras (`#E5E7EB` · painel `#E0E2E6` · cards `#F3F4F6`), texto escuro (`#1F2937` / `#4B5563` / desabilitado `#9CA3AF`) e **acento azul institucional `#2563EB`** (hover `#1D4ED8`). Padronizados estados de botões (normal/hover/ativo/desabilitado), campos, cabeçalhos de tabela (`#D6D9DE`), hover/seleção (`#DCEAFE` / `#BFDBFE`), zebra de linhas (`#ECEEF1`) e tokens de status (sucesso `#15803D`, aviso `#D97706`, erro `#DC2626`). Contraste WCAG AA verificado nas combinações principais.
+- **Ícones do ribbon**: acento recolorido de laranja para **azul `#2563EB`** nos 6 ícones (16/32 px) por mapeamento de matiz, preservando traço escuro e anti-aliasing.
+- **Logo** das janelas atualizada para a identidade "verum partners — Part of Accenture".
+
+### Layout
+- Toolbar do **Visual Sets** migrada para `WrapPanel` (evita corte de botões em janelas estreitas).
+- Painel de opções do **Image Capture** em `ScrollViewer` (evita corte em alturas baixas / DPI alto).
+
+### Removido
+- Pasta **`assets/` (raiz)**: `icons/` e `logos/` eram cópias byte-a-byte de `src/`, e `assets/images/` (originais 512 px) não eram usados em runtime. Fonte de arte única passa a ser `src/Resources/Icons/` (ícones do ribbon) e `src/Assets/` (logo/ícone embutidos na DLL).
+
 ## [1.0.0] — 2026-06-15 — Primeiro release público
 
 Primeiro release público da plataforma unificada **Navisworks Toolkit** para **Autodesk Navisworks 2026** (Simulate/Manage): uma única DLL com **seis ferramentas** na tab própria **"Navisworks Toolkit"** do ribbon. Esta versão **renumera para a série pública 1.x** o trabalho de consolidação e evolução antes registrado internamente como 2.0.0–2.3.0 (preservado abaixo, em *Histórico de desenvolvimento*).

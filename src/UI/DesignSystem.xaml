@@ -2,65 +2,77 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- ════════════════════════════════════════════════════════
-         PALETA: 5 cores fixas  Ink #292929 · Gray #585757
-                                Cream #F6F6F6 · Orange #FC6A0A · Deep Orange #E74504
-         Variações de tom via Opacity apenas.
+         PALETA (tema claro corporativo)
+           Fundo principal #E5E7EB · Painel lateral #E0E2E6
+           Cards #F3F4F6 · Cabeçalho tabela #D6D9DE · Busca #F8F9FA
+           Bordas #C5C9D0 · Hover linha #DCEAFE · Seleção #BFDBFE
+           Texto #1F2937 · Secundário #4B5563 · Desabilitado #9CA3AF
+           Primário #2563EB · Hover #1D4ED8
+           Sucesso #15803D · Aviso #D97706 · Erro #DC2626
+         NOTA: os tokens *Light (TextLight/MutedLight) historicamente eram
+         "texto sobre chrome escuro". No tema claro o chrome passou a ser
+         claro, então estes tokens agora resolvem para texto ESCURO — os
+         nomes foram mantidos para preservar as referências das janelas.
          ════════════════════════════════════════════════════════ -->
 
     <!-- BACKGROUNDS / SURFACES -->
-    <SolidColorBrush x:Key="Bg"         Color="#292929"/>
-    <SolidColorBrush x:Key="Chrome"     Color="#292929"/>
-    <SolidColorBrush x:Key="Card"       Color="#F6F6F6"/>
-    <SolidColorBrush x:Key="HeaderBg"   Color="#585757" Opacity="0.10"/>
-    <SolidColorBrush x:Key="SearchBg"   Color="#585757" Opacity="0.18"/>
+    <SolidColorBrush x:Key="Bg"         Color="#E5E7EB"/>  <!-- Fundo principal     -->
+    <SolidColorBrush x:Key="Chrome"     Color="#E0E2E6"/>  <!-- Painel lateral/topo -->
+    <SolidColorBrush x:Key="Card"       Color="#F3F4F6"/>  <!-- Cards / containers   -->
+    <SolidColorBrush x:Key="HeaderBg"   Color="#D6D9DE"/>  <!-- Cabeçalho de tabela  -->
+    <SolidColorBrush x:Key="SearchBg"   Color="#F8F9FA"/>  <!-- Campo de busca       -->
+    <SolidColorBrush x:Key="RowAlt"     Color="#ECEEF1"/>  <!-- Linha alternada (zebra) -->
 
     <!-- BORDERS / DIVIDERS -->
-    <SolidColorBrush x:Key="Line"       Color="#585757"/>
-    <SolidColorBrush x:Key="RowLine"    Color="#585757" Opacity="0.22"/>
+    <SolidColorBrush x:Key="Line"       Color="#C5C9D0"/>
+    <SolidColorBrush x:Key="RowLine"    Color="#C5C9D0" Opacity="0.6"/>
 
-    <!-- TEXT — superfície escura (chrome) -->
-    <SolidColorBrush x:Key="TextLight"  Color="#F6F6F6"/>
-    <SolidColorBrush x:Key="MutedLight" Color="#F6F6F6" Opacity="0.70"/>
+    <!-- TEXT — superfície de topo/chrome (agora CLARA → texto escuro) -->
+    <SolidColorBrush x:Key="TextLight"  Color="#1F2937"/>
+    <SolidColorBrush x:Key="MutedLight" Color="#4B5563"/>
 
     <!-- TEXT — superfície clara (card) -->
-    <SolidColorBrush x:Key="Text"       Color="#292929"/>
-    <SolidColorBrush x:Key="Muted"      Color="#585757"/>
+    <SolidColorBrush x:Key="Text"         Color="#1F2937"/>  <!-- Texto principal    -->
+    <SolidColorBrush x:Key="Muted"        Color="#4B5563"/>  <!-- Texto secundário   -->
+    <SolidColorBrush x:Key="TextDisabled" Color="#9CA3AF"/>  <!-- Texto desabilitado -->
+
+    <!-- TEXT — sobre superfícies coloridas fortes (botão primário/erro) -->
+    <SolidColorBrush x:Key="TextOnAccent" Color="#FFFFFF"/>
 
     <!-- ACCENT / CTA -->
-    <SolidColorBrush x:Key="Primary"    Color="#FC6A0A"/>
+    <SolidColorBrush x:Key="Primary"    Color="#2563EB"/>
 
     <!-- BUTTON STATES -->
-    <SolidColorBrush x:Key="Slate"      Color="#585757"/>
-    <SolidColorBrush x:Key="SlateHover" Color="#F6F6F6"/>
-    <SolidColorBrush x:Key="SlatePress" Color="#1F1F1F"/>
-    <SolidColorBrush x:Key="SlateBorder" Color="#585757"/>
-    <SolidColorBrush x:Key="Cta"        Color="#FC6A0A"/>
-    <SolidColorBrush x:Key="CtaHover"   Color="#E74504"/>
-    <SolidColorBrush x:Key="CtaPress"   Color="#E74504"/>
-    <SolidColorBrush x:Key="Danger"     Color="#E74504"/>
-    <SolidColorBrush x:Key="DangerHover" Color="#C53A03"/>
+    <SolidColorBrush x:Key="Slate"       Color="#E5E7EB"/>  <!-- Botão secundário        -->
+    <SolidColorBrush x:Key="SlateHover"  Color="#D1D5DB"/>  <!-- Hover secundário        -->
+    <SolidColorBrush x:Key="SlatePress"  Color="#C5C9D0"/>  <!-- Pressionado secundário  -->
+    <SolidColorBrush x:Key="SlateBorder" Color="#C5C9D0"/>
+    <SolidColorBrush x:Key="Cta"         Color="#2563EB"/>  <!-- Botão primário          -->
+    <SolidColorBrush x:Key="CtaHover"    Color="#1D4ED8"/>  <!-- Hover primário          -->
+    <SolidColorBrush x:Key="CtaPress"    Color="#1E40AF"/>  <!-- Pressionado primário    -->
+    <SolidColorBrush x:Key="Danger"      Color="#DC2626"/>
+    <SolidColorBrush x:Key="DangerHover" Color="#B91C1C"/>
 
     <!-- ROW STATES (para superfícies claras) -->
-    <SolidColorBrush x:Key="RowHover"   Color="#FC6A0A" Opacity="0.14"/>
-    <SolidColorBrush x:Key="RowSelect"  Color="#FC6A0A" Opacity="0.26"/>
+    <SolidColorBrush x:Key="RowHover"   Color="#DCEAFE"/>  <!-- Azul suave         -->
+    <SolidColorBrush x:Key="RowSelect"  Color="#BFDBFE"/>  <!-- Azul corporativo   -->
 
-    <!-- STATUS (feedback de mensagens) — alinhado à marca. Warning/Error/Info
-         reusam a paleta; Success é a única exceção funcional (verde sóbrio),
-         assim como Danger já é exceção para "perigo". Sem outras cores externas. -->
-    <SolidColorBrush x:Key="StatusInfo"    Color="#585757"/>
-    <SolidColorBrush x:Key="StatusSuccess" Color="#4E8A57"/>
-    <SolidColorBrush x:Key="StatusWarning" Color="#FC6A0A"/>
-    <SolidColorBrush x:Key="StatusError"   Color="#E74504"/>
+    <!-- STATUS (feedback de mensagens, alertas e notificações) -->
+    <SolidColorBrush x:Key="StatusInfo"    Color="#2563EB"/>
+    <SolidColorBrush x:Key="StatusSuccess" Color="#15803D"/>
+    <SolidColorBrush x:Key="StatusWarning" Color="#D97706"/>
+    <SolidColorBrush x:Key="StatusError"   Color="#DC2626"/>
 
     <!-- ════════════════════════════════════════════════════════
          BOTÕES
          ════════════════════════════════════════════════════════ -->
 
-    <!-- BtnSecondary: fundo cinza → cream no hover -->
+    <!-- BtnSecondary: cinza neutro → cinza mais escuro no hover (texto sempre escuro) -->
     <Style x:Key="BtnSecondary" TargetType="Button">
         <Setter Property="Background"          Value="{StaticResource Slate}"/>
-        <Setter Property="Foreground"          Value="{StaticResource TextLight}"/>
-        <Setter Property="BorderThickness"     Value="0"/>
+        <Setter Property="Foreground"          Value="{StaticResource Text}"/>
+        <Setter Property="BorderBrush"         Value="{StaticResource SlateBorder}"/>
+        <Setter Property="BorderThickness"     Value="1"/>
         <Setter Property="Padding"             Value="12,9"/>
         <Setter Property="FontSize"            Value="13"/>
         <Setter Property="FontWeight"          Value="SemiBold"/>
@@ -72,6 +84,8 @@
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Bd"
                             Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="6"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -79,14 +93,13 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="{StaticResource SlateHover}"/>
-                            <Setter Property="Foreground" Value="{StaticResource Text}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="{StaticResource SlatePress}"/>
-                            <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Bd" Property="Opacity" Value="0.45"/>
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.55"/>
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabled}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -94,10 +107,10 @@
         </Setter>
     </Style>
 
-    <!-- BtnCta: laranja → deep orange no hover -->
+    <!-- BtnCta: azul institucional → azul escuro no hover (texto branco) -->
     <Style x:Key="BtnCta" TargetType="Button">
         <Setter Property="Background"          Value="{StaticResource Cta}"/>
-        <Setter Property="Foreground"          Value="#292929"/>
+        <Setter Property="Foreground"          Value="{StaticResource TextOnAccent}"/>
         <Setter Property="BorderThickness"     Value="0"/>
         <Setter Property="Padding"             Value="12,9"/>
         <Setter Property="FontSize"            Value="13"/>
@@ -117,13 +130,12 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="{StaticResource CtaHover}"/>
-                            <Setter Property="Foreground" Value="#F6F6F6"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="{StaticResource CtaPress}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Bd" Property="Opacity" Value="0.45"/>
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.55"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -131,10 +143,10 @@
         </Setter>
     </Style>
 
-    <!-- BtnDanger: deep orange para ações destrutivas -->
+    <!-- BtnDanger: vermelho para ações destrutivas (texto branco) -->
     <Style x:Key="BtnDanger" TargetType="Button">
         <Setter Property="Background"          Value="{StaticResource Danger}"/>
-        <Setter Property="Foreground"          Value="#F6F6F6"/>
+        <Setter Property="Foreground"          Value="{StaticResource TextOnAccent}"/>
         <Setter Property="BorderThickness"     Value="0"/>
         <Setter Property="Padding"             Value="12,9"/>
         <Setter Property="FontSize"            Value="13"/>
@@ -159,7 +171,7 @@
                             <Setter TargetName="Bd" Property="Background" Value="{StaticResource DangerHover}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Bd" Property="Opacity" Value="0.45"/>
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.55"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -171,10 +183,10 @@
          INPUTS
          ════════════════════════════════════════════════════════ -->
 
-    <!-- FieldBox: campo de texto padrão sobre superfície escura -->
+    <!-- FieldBox: campo de texto padrão (superfície clara de busca) -->
     <Style x:Key="FieldBox" TargetType="TextBox">
         <Setter Property="Background"      Value="{StaticResource SearchBg}"/>
-        <Setter Property="Foreground"      Value="{StaticResource TextLight}"/>
+        <Setter Property="Foreground"      Value="{StaticResource Text}"/>
         <Setter Property="BorderBrush"     Value="{StaticResource Line}"/>
         <Setter Property="BorderThickness" Value="1.5"/>
         <Setter Property="Height"          Value="34"/>
@@ -195,7 +207,7 @@
                             SnapsToDevicePixels="True">
                         <Grid Margin="{TemplateBinding Padding}">
                             <TextBlock Text="{TemplateBinding Tag}"
-                                       Foreground="{StaticResource MutedLight}"
+                                       Foreground="{StaticResource TextDisabled}"
                                        IsHitTestVisible="False"
                                        VerticalAlignment="Center">
                                 <TextBlock.Style>
@@ -220,7 +232,7 @@
                             <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Primary}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Bd" Property="Opacity" Value="0.45"/>
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.55"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -264,11 +276,11 @@
 
     <Style x:Key="DarkDataGridHeader" TargetType="DataGridColumnHeader">
         <Setter Property="Background"      Value="{StaticResource HeaderBg}"/>
-        <Setter Property="Foreground"      Value="{StaticResource Muted}"/>
+        <Setter Property="Foreground"      Value="{StaticResource Text}"/>
         <Setter Property="FontWeight"      Value="SemiBold"/>
         <Setter Property="FontSize"        Value="11"/>
         <Setter Property="Padding"         Value="8,5"/>
-        <Setter Property="BorderBrush"     Value="{StaticResource RowLine}"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource Line}"/>
         <Setter Property="BorderThickness" Value="0,0,1,1"/>
     </Style>
 
@@ -278,6 +290,9 @@
         <Setter Property="BorderBrush"     Value="{StaticResource RowLine}"/>
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
         <Style.Triggers>
+            <Trigger Property="AlternationIndex" Value="1">
+                <Setter Property="Background" Value="{StaticResource RowAlt}"/>
+            </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource RowHover}"/>
             </Trigger>
@@ -311,14 +326,14 @@
                 <ControlTemplate TargetType="CheckBox">
                     <Grid Width="18" Height="18">
                         <Border x:Name="Bg"
-                                Background="{StaticResource Card}"
+                                Background="{StaticResource SearchBg}"
                                 BorderBrush="{StaticResource SlateBorder}"
                                 BorderThickness="1.5"
                                 CornerRadius="4"
                                 SnapsToDevicePixels="True"/>
                         <Path x:Name="Check"
                               Data="M3,9 L7,13 L15,5"
-                              Stroke="#292929" StrokeThickness="2"
+                              Stroke="{StaticResource TextOnAccent}" StrokeThickness="2"
                               StrokeStartLineCap="Round" StrokeEndLineCap="Round"
                               Visibility="Collapsed"
                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -345,7 +360,7 @@
     <Style x:Key="ProgressDark" TargetType="ProgressBar">
         <Setter Property="Height"     Value="6"/>
         <Setter Property="Foreground" Value="{StaticResource Primary}"/>
-        <Setter Property="Background" Value="{StaticResource SearchBg}"/>
+        <Setter Property="Background" Value="{StaticResource Line}"/>
     </Style>
 
     <!-- ════════════════════════════════════════════════════════
@@ -354,7 +369,7 @@
          ════════════════════════════════════════════════════════ -->
 
     <Style x:Key="SearchBox" TargetType="TextBox">
-        <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
+        <Setter Property="Foreground" Value="{StaticResource Text}"/>
         <Setter Property="CaretBrush" Value="{StaticResource Primary}"/>
         <Setter Property="SelectionBrush" Value="{StaticResource Primary}"/>
         <Setter Property="FontSize" Value="13"/>
@@ -373,10 +388,10 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Path Grid.Column="0" Margin="11,0,8,0" VerticalAlignment="Center"
-                                  Stroke="{StaticResource MutedLight}" StrokeThickness="1.6"
+                                  Stroke="{StaticResource Muted}" StrokeThickness="1.6"
                                   Data="M7,7 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0 M11,11 L15,15"/>
                             <TextBlock x:Name="ph" Grid.Column="1" Text="Buscar..."
-                                       Foreground="{StaticResource MutedLight}"
+                                       Foreground="{StaticResource TextDisabled}"
                                        VerticalAlignment="Center" Margin="2,0,34,0"
                                        Visibility="Collapsed" IsHitTestVisible="False"/>
                             <ScrollViewer x:Name="PART_ContentHost" Grid.Column="1"
@@ -407,13 +422,13 @@
                     <Border x:Name="cb" CornerRadius="11" Background="Transparent">
                         <Path x:Name="xp" HorizontalAlignment="Center" VerticalAlignment="Center"
                               Data="M6,6 L14,14 M14,6 L6,14"
-                              Stroke="{StaticResource MutedLight}" StrokeThickness="1.6"
+                              Stroke="{StaticResource Muted}" StrokeThickness="1.6"
                               StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="cb" Property="Background" Value="{StaticResource SearchBg}"/>
-                            <Setter TargetName="xp" Property="Stroke" Value="{StaticResource TextLight}"/>
+                            <Setter TargetName="cb" Property="Background" Value="{StaticResource SlateHover}"/>
+                            <Setter TargetName="xp" Property="Stroke" Value="{StaticResource Text}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -428,14 +443,14 @@
          ════════════════════════════════════════════════════════ -->
 
     <Style TargetType="GridViewColumnHeader">
-        <Setter Property="Foreground" Value="{StaticResource Muted}"/>
+        <Setter Property="Foreground" Value="{StaticResource Text}"/>
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GridViewColumnHeader">
                     <Border Background="{StaticResource HeaderBg}"
-                            BorderBrush="{StaticResource RowLine}"
+                            BorderBrush="{StaticResource Line}"
                             BorderThickness="0,0,1,1" Padding="10,8">
                         <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     </Border>
@@ -457,6 +472,9 @@
                         <GridViewRowPresenter VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                            <Setter TargetName="bd" Property="Background" Value="{StaticResource RowAlt}"/>
+                        </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="bd" Property="Background" Value="{StaticResource RowHover}"/>
                         </Trigger>

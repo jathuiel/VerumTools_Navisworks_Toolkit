@@ -70,10 +70,10 @@ Racional do agrupamento: *Visualization* concentra o que muda o que se vê (view
 
 | Requisito | Especificação |
 |---|---|
-| Fonte de arte | **SVG** por ícone em `assets/icons/svg/` (fonte única, versionável) |
+| Fonte de arte | **PNG** por ícone em `src/Resources/Icons/` (16/32 px; embutidos pelo build) |
 | Rasterização | PNG 16×16, 32×32 e **64×64** (large ribbon em telas high-DPI), fundo transparente |
 | Grade | 24×24 de desenho com 2px de margem de segurança; traço 1.5px; cantos arredondados raio 2 |
-| Cores | Monocromático Ink `#292929` para estado normal; acento Orange `#FC6A0A` em no máximo 1 elemento por ícone; sem texto embutido; alto contraste sobre o cinza do ribbon |
+| Cores | Monocromático Ink `#292929` para estado normal; acento Azul `#2563EB` em no máximo 1 elemento por ícone; sem texto embutido; alto contraste sobre o cinza do ribbon |
 | Nomenclatura | `<IdTécnico>_<tamanho>.png` (mantida — ex.: `ViewBuilder_32.png`) |
 
 **Conceitos sugeridos por ícone:**
