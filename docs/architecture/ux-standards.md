@@ -1,6 +1,6 @@
 # UX Standards — Navisworks Toolkit
 
-> **Versão:** 1.0 · **Data:** 2026-06-11 · **Aplicado em:** Navisworks Toolkit v2.1.0
+> **Versão:** 1.1 · **Data:** 2026-06-15 · **Aplicado em:** Navisworks Toolkit v1.0.1
 > **Escopo:** naming, ribbon, títulos de janela, ícones e consistência visual.
 > **Restrições respeitadas:** nenhuma funcionalidade modificada; nenhuma lógica de negócio alterada; apenas rótulos, organização e experiência.
 
