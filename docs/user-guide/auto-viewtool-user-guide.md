@@ -1,10 +1,11 @@
-# Guia do Usuário — Verum Toolkit
+# Guia do Usuário — Navisworks Toolkit
 
-Suíte de três ferramentas que automatiza o trabalho com Viewpoints e Selection Sets no
-Navisworks. Após a instalação, a ribbon ganha a aba **Verum Toolkit** com o painel
-*Automation Tools* e três botões: **ViewBuilder**, **ModelCleaner** e **ImageExporter**.
+Suíte de seis ferramentas que automatiza o trabalho com Viewpoints, Selection Sets e
+atributos BIM no Navisworks. Após a instalação, a ribbon ganha a aba **Navisworks Toolkit**
+com seis botões: **Smart Views**, **Model Cleanup**, **Image Capture**,
+**Selection Inspector**, **Property Explorer** e **Visual Sets**.
 
-> Versão **v1.1.2** · Navisworks Simulate / Manage **2025–2027**
+> Versão **v1.0.1** · Navisworks Simulate / Manage **2026**
 
 ---
 
@@ -12,11 +13,14 @@ Navisworks. Após a instalação, a ribbon ganha a aba **Verum Toolkit** com o p
 
 1. [Instalação](#instalação)
 2. [Pré-requisitos](#pré-requisitos)
-3. [ViewBuilder — Criar Viewpoints](#1-viewbuilder--criar-viewpoints)
-4. [ModelCleaner — Limpeza](#2-modelcleaner--limpeza)
-5. [ImageExporter — Exportar Imagens](#3-imageexporter--exportar-imagens)
-6. [Fluxos de trabalho comuns](#fluxos-de-trabalho-comuns)
-7. [Perguntas frequentes](#perguntas-frequentes)
+3. [Smart Views — Criar Viewpoints](#1-smart-views--criar-viewpoints)
+4. [Model Cleanup — Limpeza](#2-model-cleanup--limpeza)
+5. [Image Capture — Exportar Imagens](#3-image-capture--exportar-imagens)
+6. [Selection Inspector — Inspecionar Propriedades](#4-selection-inspector--inspecionar-propriedades)
+7. [Property Explorer — Atributos Customizados](#5-property-explorer--atributos-customizados)
+8. [Visual Sets — Coloração por Set](#6-visual-sets--coloração-por-set)
+9. [Fluxos de trabalho comuns](#fluxos-de-trabalho-comuns)
+10. [Perguntas frequentes](#perguntas-frequentes)
 
 ---
 
@@ -25,44 +29,37 @@ Navisworks. Após a instalação, a ribbon ganha a aba **Verum Toolkit** com o p
 > **Feche o Navisworks antes de instalar ou atualizar** — ele trava os arquivos do
 > plugin enquanto está aberto.
 
-**Opção 1 — Instalador (recomendado):** execute `VerumToolkit_v<versão>_Setup.exe` e
-siga o assistente. Não requer privilégios de administrador; a instalação vale para o
-seu usuário do Windows. O desinstalador fica disponível em
-*Configurações → Aplicativos instalados*.
-
-**Opção 2 — Manual (zip):** extraia o `AutoViewTool_v<versão>_bundle.zip` e copie a
-pasta `AutoViewTool.bundle` para:
+Execute o script `deploy.ps1` **como Administrador** (clique com o botão direito →
+*Executar como administrador*). O script compila o projeto em Release e copia os
+arquivos para:
 
 ```
-%APPDATA%\Autodesk\ApplicationPlugins\
+C:\Program Files\Autodesk\Navisworks Simulate 2026\Plugins\NavisworksToolkit\
 ```
 
-Em ambos os casos, abra o Navisworks em seguida e confira a aba **Verum Toolkit**
-na ribbon.
+Abra o Navisworks em seguida e confira a aba **Navisworks Toolkit** na ribbon.
 
 ---
 
 ## Pré-requisitos
 
-- Navisworks **Simulate** ou **Manage**, versão **2025, 2026 ou 2027**.
+- Navisworks **Simulate** ou **Manage**, versão **2026**.
 - Um arquivo de modelo aberto (`.nwd`, `.nwc` ou `.nwf`).
 - Para criar viewpoints: o modelo deve conter **Selection Sets** (painel *Sets* do Navisworks).
 - Para exportar imagens: o modelo deve conter **Viewpoints** salvos.
 
 ---
 
-## 1. ViewBuilder — Criar Viewpoints
+## 1. Smart Views — Criar Viewpoints
 
-**Abre:** aba **Verum Toolkit** → botão **ViewBuilder** (janela *View Builder — Criador de Viewpoints*)
+**Abre:** aba **Navisworks Toolkit** → botão **Smart Views** (janela *Smart Views*)
 
-Cria viewpoints isométricos automaticamente a partir dos Selection Sets do modelo.
-Os elementos do set ficam com aparência original; todo o resto recebe um override cinza
-semi-transparente (*ghosting*), mantendo o contexto espacial do modelo. A câmera é
-posicionada em ângulo isométrico e enquadra exatamente a bounding box do conjunto.
+Cria viewpoints automaticamente a partir dos Selection Sets do modelo, com controle
+de isolamento, projeção de câmera e orientações de vista.
 
 ### Fluxo básico
 
-1. **Abra a ferramenta** clicando em **ViewBuilder** no ribbon.
+1. **Abra a ferramenta** clicando em **Smart Views** no ribbon.
    A janela lista todos os Selection Sets encontrados no modelo (colunas NOME, ITENS, DESCRIÇÃO).
 
 2. **Selecione os sets** que deseja transformar em viewpoints:
@@ -72,17 +69,34 @@ posicionada em ângulo isométrico e enquadra exatamente a bounding box do conju
 3. **Filtre a lista** (opcional): digite no campo de busca para filtrar por nome ou descrição.
    O botão **✕** à direita do campo limpa o filtro. A seleção de itens não é perdida ao filtrar.
 
-4. Observe o **painel de estatísticas** (coluna direita):
+4. **Configure as opções** no painel direito:
+
+   **ISOLAMENTO**
+   | Opção | Comportamento |
+   |---|---|
+   | Até o Source File (com contexto) | Ghosting cinza nos elementos do mesmo Source File; oculta os demais. |
+   | Apenas itens do SET | Oculta tudo que não pertence ao set — mostra somente a geometria selecionada. |
+
+   **CÂMERA**
+   | Opção | Comportamento |
+   |---|---|
+   | Ortográfica | Projeção paralela — sem perspectiva. |
+   | Perspectiva | Projeção cônica — visão mais natural. |
+
+   **VISTAS** — marque as orientações desejadas; cada orientação marcada gera **um viewpoint independente** por set:
+   - Isométrica · Vista superior · Vista frontal · Vista traseira · Vista lateral esquerda · Vista lateral direita
+
+5. Observe o **painel de estatísticas** (coluna direita):
    - `Selection Sets` — total de sets no modelo.
    - `Viewpoints` — viewpoints já salvos no documento.
    - `Tempo est.` — estimativa de duração para criar os viewpoints marcados.
 
-5. Clique em **Criar Viewpoints**.
+6. Clique em **Criar Viewpoints**.
    A barra de progresso no rodapé avança por set (o botão **Cancelar** interrompe a operação).
    Ao final, o status mostra quantos foram criados.
 
-6. Os viewpoints aparecem no painel **Saved Viewpoints** do Navisworks com o nome
-   `VP_<NomeDoSet>_<timestamp>` (ou com o nome definido no template — ver abaixo).
+7. Os viewpoints aparecem no painel **Saved Viewpoints** do Navisworks com o nome
+   `VP_<NomeDoSet>_<Orientação>` (ou com o nome definido no template — ver abaixo).
 
 > **Restaurar Visibilidade**: Use quando o modelo ficar com elementos ghostados ou ocultos (ex.: após
 > cancelar uma operação ou fechar a janela sem concluir). Clique em **Restaurar Visibilidade** para reverter
@@ -111,7 +125,7 @@ Na aba **Viewpoints**, preencha **uma linha por viewpoint** que deseja criar:
 | Coluna | Obrigatória? | Descrição |
 |---|---|---|
 | `SelectionSet` | **Sim** | Nome de um Selection Set existente no modelo. |
-| `NomeDoViewpoint` | Não | Nome do viewpoint a criar. Em branco = nome automático (`VP_<set>_<timestamp>`). |
+| `NomeDoViewpoint` | Não | Nome do viewpoint a criar. Em branco = nome automático (`VP_<set>_<Orientação>`). |
 | `Descricao` | Não | Texto livre associado ao viewpoint. |
 
 Pode editar em qualquer editor compatível (Excel, LibreOffice, Google Sheets).
@@ -129,9 +143,9 @@ Pode editar em qualquer editor compatível (Excel, LibreOffice, Google Sheets).
 
 ---
 
-## 2. ModelCleaner — Limpeza
+## 2. Model Cleanup — Limpeza
 
-**Abre:** aba **Verum Toolkit** → botão **ModelCleaner** (janela *Model Cleaner — Limpeza de Search Sets e Viewpoints*)
+**Abre:** aba **Navisworks Toolkit** → botão **Model Cleanup** (janela *Model Cleanup*)
 
 Remove Search Sets e Viewpoints do modelo, individualmente ou em lote.
 
@@ -169,9 +183,9 @@ clique em **Atualizar** para recarregar as listas.
 
 ---
 
-## 3. ImageExporter — Exportar Imagens
+## 3. Image Capture — Exportar Imagens
 
-**Abre:** aba **Verum Toolkit** → botão **ImageExporter** (janela *Image Exporter — Exportar imagens de Viewpoints*)
+**Abre:** aba **Navisworks Toolkit** → botão **Image Capture** (janela *Image Capture*)
 
 Exporta imagens JPG dos viewpoints selecionados. Cada imagem é gerada a partir da câmera e
 visibilidade exata do viewpoint (incluindo markups, se a opção estiver ativa).
@@ -210,6 +224,100 @@ visibilidade exata do viewpoint (incluindo markups, se a opção estiver ativa).
 
 ---
 
+## 4. Selection Inspector — Inspecionar Propriedades
+
+**Abre:** aba **Navisworks Toolkit** → botão **Selection Inspector** (janela *Selection Inspector*)
+
+Inspeciona e exporta as propriedades BIM dos elementos selecionados no modelo.
+
+### Como usar
+
+1. Selecione um ou mais elementos no Navisworks.
+2. Abra o **Selection Inspector** — a grade é preenchida automaticamente com todas as
+   categorias e propriedades dos elementos selecionados.
+3. Filtre as categorias desejadas pelos **checkboxes** na coluna esquerda.
+4. Exporte os dados em um dos formatos disponíveis:
+
+| Botão | Formato | Uso indicado |
+|---|---|---|
+| **Exportar CSV** | `.csv` (separador `;`, BOM UTF-8) | Excel, Power BI, scripts |
+| **Exportar XML** | `.xml` (Excel XML) | Abre no Excel com formatação de células |
+| **Copiar** | TSV na área de transferência | Colar diretamente em planilha aberta |
+
+> O processamento ocorre em background — a interface não trava durante a leitura de grandes seleções.
+
+---
+
+## 5. Property Explorer — Atributos Customizados
+
+**Abre:** aba **Navisworks Toolkit** → botão **Property Explorer** (janela *Property Explorer*)
+
+Grava e remove atributos customizados nos elementos selecionados, com suporte a
+importação de categorias nativas e registro de Selection Sets.
+
+### Seções da interface
+
+**1 — Atributos Nativos**
+- Árvore de categorias e propriedades lidas diretamente da seleção atual.
+- Clique em **Importar** ao lado de uma categoria para copiar seus atributos para o laboratório.
+
+**2 — Nome da categoria custom**
+- Campo livre para nomear a categoria que receberá os atributos gravados.
+- Preenchido automaticamente ao importar uma categoria nativa.
+
+**3 — Selection Sets detectados**
+- Lista os sets aos quais os elementos selecionados pertencem.
+- Marque os sets a registrar como atributo `_sets` na categoria customizada.
+- A seleção persiste entre sessões: na próxima abertura, os sets previamente gravados são marcados.
+
+**4 — Atributos extras a gravar**
+- Grade editável com colunas **Nome / Valor / Tipo** (`string`, `int`, `double`, `boolean`).
+- Linhas adicionadas manualmente ou importadas de template (`.csv` / `.xml`).
+
+### Gravar e remover
+
+- **Gravar**: aplica os atributos configurados nos elementos selecionados via COM API,
+  com merge — preserva atributos existentes e atualiza apenas os editados.
+  Um log de verificação exibe o estado antes e depois da gravação.
+- **Remover**: exclui a categoria customizada (e categorias legadas) de todos os elementos selecionados.
+
+---
+
+## 6. Visual Sets — Coloração por Set
+
+**Abre:** aba **Navisworks Toolkit** → botão **Visual Sets** (janela *Visual Sets*)
+
+Aplica substituições de cor e transparência aos elementos do modelo baseadas em
+Selection Sets, sem alterar o arquivo original.
+
+### Como usar
+
+1. Abra o **Visual Sets** — a lista carrega todos os Selection Sets do documento.
+2. Se houver elementos selecionados na cena, os sets que os contêm são **marcados
+   automaticamente** como habilitados (auto-seleção inteligente).
+3. Para cada set, defina:
+   - **Cor** via color picker.
+   - **Transparência** de 0 % (opaco) a 100 % (invisível).
+   - **Ativo / Inativo** — checkbox para incluir ou excluir o set da aplicação.
+4. Clique em **Aplicar** para sobrepor os overrides no modelo.
+5. Clique em **Remover overrides** para limpar todas as substituições de cor e transparência.
+
+### Importar e exportar regras
+
+As regras podem ser salvas e carregadas em formato XML:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<ColoringRules version="1.0">
+  <Rule SelectionSet="Estrutura"  Color="#FF0000" Transparency="0"  Enabled="true"/>
+  <Rule SelectionSet="Hidraulica" Color="#0000FF" Transparency="30" Enabled="true"/>
+</ColoringRules>
+```
+
+Use **Exportar regras** para salvar o arquivo e **Importar regras** para reaplicar em outra sessão ou modelo.
+
+---
+
 ## Fluxos de trabalho comuns
 
 ### Criar viewpoints de um modelo novo do zero
@@ -217,22 +325,22 @@ visibilidade exata do viewpoint (incluindo markups, se a opção estiver ativa).
 ```
 1. Abra o modelo no Navisworks.
 2. Certifique-se de que os Selection Sets estão criados (painel Sets).
-3. Verum Toolkit → ViewBuilder → marque todos → Criar Viewpoints.
+3. Navisworks Toolkit → Smart Views → marque todos → Criar Viewpoints.
 4. Verifique os viewpoints criados no painel Saved Viewpoints.
 ```
 
 ### Ciclo de revisão com nomes padronizados
 
 ```
-1. ViewBuilder → Gerar modelo (.xlsx).
+1. Smart Views → Gerar modelo (.xlsx).
 2. Preencha SelectionSet / NomeDoViewpoint / Descricao conforme a nomenclatura do projeto.
-3. ViewBuilder → Importar template (.xlsx) → Criar Viewpoints.
+3. Smart Views → Importar template (.xlsx) → Criar Viewpoints.
 ```
 
 ### Exportar imagens para relatório
 
 ```
-1. Verum Toolkit → ImageExporter.
+1. Navisworks Toolkit → Image Capture.
 2. Marque os viewpoints de interesse (use a busca para filtrar por disciplina).
 3. Configure: pasta de destino, resolução 1920×1080, qualidade 90, prefixo = código do projeto.
 4. Exportar selecionados → a pasta abre ao final.
@@ -241,7 +349,7 @@ visibilidade exata do viewpoint (incluindo markups, se a opção estiver ativa).
 ### Limpar viewpoints de rascunho antes de entregar o modelo
 
 ```
-1. Verum Toolkit → ModelCleaner.
+1. Navisworks Toolkit → Model Cleanup.
 2. Na coluna Viewpoints, busque o padrão dos rascunhos (ex.: "VP_TESTE").
 3. Marque-os → Remover selecionados → confirmar.
 ```
@@ -249,24 +357,40 @@ visibilidade exata do viewpoint (incluindo markups, se a opção estiver ativa).
 ### Recriar todos os viewpoints após alteração de sets
 
 ```
-1. ModelCleaner → Viewpoints → selecionar todos → Remover selecionados.
-2. ViewBuilder → selecionar todos os sets → Criar Viewpoints.
+1. Model Cleanup → Viewpoints → selecionar todos → Remover selecionados.
+2. Smart Views → selecionar todos os sets → Criar Viewpoints.
+```
+
+### Documentar atributos de elementos para relatório BIM
+
+```
+1. Selecione os elementos no Navisworks.
+2. Navisworks Toolkit → Selection Inspector.
+3. Filtre as categorias relevantes.
+4. Exportar CSV → abrir no Excel.
+```
+
+### Aplicar paleta de cores por disciplina para apresentação
+
+```
+1. Navisworks Toolkit → Visual Sets.
+2. Atribua cores por set (ex.: vermelho = estrutura, azul = hidráulica).
+3. Aplicar → faça a captura de tela ou use com Image Capture.
+4. Remover overrides ao finalizar.
 ```
 
 ---
 
 ## Perguntas frequentes
 
-**A aba Verum Toolkit não aparece na ribbon.**
+**A aba Navisworks Toolkit não aparece na ribbon.**
 Verifique, nesta ordem:
-1. O bundle está no local certo? Deve existir
-   `%APPDATA%\Autodesk\ApplicationPlugins\AutoViewTool.bundle\PackageContents.xml`.
+1. O plugin está no local certo? Deve existir a pasta
+   `C:\Program Files\Autodesk\Navisworks Simulate 2026\Plugins\NavisworksToolkit\`.
 2. O Navisworks foi **reiniciado** após a instalação? O plugin só carrega na abertura.
-3. A sua versão do Navisworks é 2025, 2026 ou 2027? Versões fora desse intervalo não
-   carregam o bundle.
-4. Existe uma cópia antiga em
-   `C:\Program Files\Autodesk\Navisworks <Edição> <Ano>\Plugins\AutoViewTool\`?
-   Remova-a (requer admin) para evitar conflito de cópias duplicadas.
+3. A sua versão do Navisworks é a **2026**? Outras versões não são garantidas.
+4. O `deploy.ps1` foi executado **como Administrador**? Sem privilégio de admin, a cópia
+   para `Program Files` falha silenciosamente.
 
 **A lista de Selection Sets está vazia.**
 O modelo não tem sets criados, ou o arquivo foi aberto sem os sets vinculados (verifique o
@@ -287,7 +411,7 @@ O Navisworks pode precisar de alguns instantes para renderizar a cena antes de c
 Se o problema persistir, tente reduzir a resolução ou fechar outras janelas pesadas.
 
 **A imagem não tem os markups/redlines.**
-Verifique se a opção **Incluir markups (overlays)** está marcada no ImageExporter.
+Verifique se a opção **Incluir markups (overlays)** está marcada no Image Capture.
 Também confirme que os redlines estão associados ao viewpoint (visíveis ao clicar nele no
 painel Saved Viewpoints).
 
@@ -296,12 +420,15 @@ Abra um arquivo de modelo (`.nwd`, `.nwc` ou `.nwf`) antes de acionar qualquer b
 
 **Falha ao instalar/atualizar ("arquivo em uso").**
 O Navisworks trava os arquivos do plugin enquanto está aberto. Feche o Navisworks,
-clique em **Repetir** no instalador (ou execute-o novamente) e reabra o Navisworks ao final.
-A instalação padrão não precisa de administrador.
+execute o `deploy.ps1` novamente como Administrador e reabra o Navisworks ao final.
 
 **O campo de busca não aceita digitação.**
 Clique uma vez dentro do campo para garantir o foco do teclado. Se o problema persistir,
-a versão instalada é antiga — atualize para a versão atual com o instalador.
+a versão instalada é antiga — execute o `deploy.ps1` para atualizar.
+
+**Os overrides de cor não somem após fechar o Visual Sets.**
+Os overrides de cor são persistidos no documento. Use o botão **Remover overrides** antes
+de fechar, ou execute *Reset Colors* pelo menu do próprio Navisworks.
 
 ---
 

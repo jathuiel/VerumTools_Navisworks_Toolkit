@@ -27,6 +27,7 @@
         <SolidColorBrush x:Key="HeaderBg"   Color="#D6D9DE"/>  <!-- topo da grade          -->
         <SolidColorBrush x:Key="Line"       Color="#C5C9D0"/>  <!-- bordas / divisores     -->
         <SolidColorBrush x:Key="RowLine"    Color="#C5C9D0" Opacity="0.6"/> <!-- linhas grade -->
+        <SolidColorBrush x:Key="RowAlt"     Color="#ECEEF1"/>  <!-- linha alternada (zebra) -->
         <SolidColorBrush x:Key="SearchBg"   Color="#F8F9FA"/>  <!-- campo busca            -->
 
         <SolidColorBrush x:Key="Text"       Color="#1F2937"/>  <!-- texto principal         -->
