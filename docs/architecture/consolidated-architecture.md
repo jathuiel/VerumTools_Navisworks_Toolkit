@@ -1,7 +1,6 @@
 # Arquitetura Consolidada — Navisworks Toolkit
 
 > Documento de arquitetura da solução unificada criada em 2026-06-11.
-> Para a arquitetura dos projetos originais, ver os guias em `/docs/developer-guide/`.
 
 ## Visão geral
 

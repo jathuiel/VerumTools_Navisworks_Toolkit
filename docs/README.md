@@ -13,30 +13,14 @@ Os projetos originais estão preservados integralmente em `/Archive`: as pastas 
 
 | Pasta | Conteúdo |
 |---|---|
-| [`user-guide/`](./user-guide/) | Guias do usuário final das seis ferramentas |
-| [`developer-guide/`](./developer-guide/) | Build, deploy, empacotamento, padrões de código |
 | [`architecture/`](./architecture/) | Arquitetura da solução consolidada, design system, registro de plugins |
-| [`specifications/`](./specifications/) | Fluxo spec-driven (PRD → Spec → Implement) e specs históricas |
-| [`skills/`](./skills/) | Skills e comandos de desenvolvimento assistido (Claude Code) |
 | [`release-notes/`](./release-notes/) | Changelog consolidado e histórico de versões |
-| [`migration/`](./migration/) | Artefatos da consolidação: inventário, MigrationReport, checklist de validação, scripts e log de deploy |
+| [`migration/`](./migration/) | Artefatos da consolidação: inventário, MigrationReport, checklist de validação e log de deploy |
 
 ## Documentos principais
 
-### Guias do usuário
-- [Auto ViewTool — Guia do usuário](./user-guide/auto-viewtool-user-guide.md) — ViewBuilder, ModelCleaner, ImageExporter
-- [SetAtributes Toolkit — Guia e funcionalidades](./user-guide/setatributes-toolkit-guide.md) — Inspeção, Atributos, Coloração
-
-### Guias do desenvolvedor
-- [Auto ViewTool — README original](./developer-guide/auto-viewtool-readme.md)
-- [Auto ViewTool — Guia de desenvolvimento](./developer-guide/auto-viewtool-dev-guide.md)
-- [Auto ViewTool — Setup do SDK](./developer-guide/auto-viewtool-setup.md)
-- [Auto ViewTool — Empacotamento (bundle Autodesk)](./developer-guide/auto-viewtool-empacotamento.md)
-- [SetAtributes — Guia de desenvolvimento](./developer-guide/setatributes-dev-guide.md)
-
 ### Arquitetura
 - [Arquitetura consolidada](./architecture/consolidated-architecture.md) — estrutura da nova solução, ribbon única, namespaces
-- [Mapa de tema WPF (Auto ViewTool)](./architecture/theme-map-auto-viewtool.md)
 
 ### Release notes
 - [CHANGELOG consolidado](./release-notes/CHANGELOG.md)
