@@ -2,13 +2,13 @@
 
 Plataforma unificada de plugins para **Autodesk Navisworks 2026** (Simulate/Manage), resultado da consolidação dos projetos **Auto_ViewTool (Verum Toolkit)** e **SetAtributesToolkit (Construct Sync Toolkit)**. Uma única DLL expõe **seis ferramentas** na tab própria **"Navisworks Toolkit"** do ribbon.
 
-> Versão: **1.0.1** · .NET Framework 4.8 · WPF · x64
+> Versão: **1.1.0** · .NET Framework 4.8 · WPF · x64
 
 ## Ferramentas
 
 | Painel | Botão | O que faz | Origem |
 |---|---|---|---|
-| **Visualization** | Smart Views | Cria viewpoints isométricos em lote a partir de Selection Sets; elementos fora do set ficam transparentes (*ghosting*) para contexto espacial (template Excel opcional) | Auto_ViewTool |
+| **Visualization** | Smart Views | Cria viewpoints em lote a partir de Selection Sets em múltiplas orientações (isométricas + ortogonais); elementos fora do set ficam transparentes (*ghosting*) para contexto espacial (template Excel opcional) | Auto_ViewTool |
 | **Visualization** | Visual Sets | Aplica overrides de cor/transparência por Selection Set (import/export XML) | SetAtributesToolkit |
 | **Visualization** | Image Capture | Exporta JPG dos viewpoints (resolução, qualidade, markups) | Auto_ViewTool |
 | **Selection** | Selection Inspector | Inspeção tabular de propriedades BIM com exportação CSV/Excel/TSV | SetAtributesToolkit |
@@ -16,6 +16,14 @@ Plataforma unificada de plugins para **Autodesk Navisworks 2026** (Simulate/Mana
 | **Model** | Model Cleanup | Remove Search Sets e Viewpoints indesejados | Auto_ViewTool |
 
 > Nomes comerciais definidos nos [UX Standards](./docs/architecture/ux-standards.md); os IDs técnicos dos comandos permanecem os da consolidação.
+
+## Novidades da v1.1.0
+
+- **Smart Views — 8 novas orientações isométricas** por Selection Set: superiores (`Top Front Right/Left`, `Top Back Right/Left`) e intermediárias (`Top Front`, `Top Back`, `Top Right`, `Top Left`), somadas às já existentes.
+- **Vista Isométrica** passa a enquadrar todo o **contexto visível do nível** (set + *ghosting* do mesmo Source File), em vez de cortar justo na seleção.
+- **Bordas afinadas para 0.8px** (*hairline*) no tema e nas seis janelas.
+
+Detalhes completos em [RELEASE_v1.1.0](./docs/release-notes/RELEASE_v1.1.0.md) e no [CHANGELOG](./docs/release-notes/CHANGELOG.md).
 
 ## Estrutura do repositório
 
@@ -33,13 +41,10 @@ src/                         # Código consolidado
 └── en-US/                   # Layout do ribbon (NavisworksToolkit.xaml)
 config/                      # Configuração central (config.json) e documentação
 docs/                        # Documentação consolidada (user/dev guides, arquitetura, specs)
-└── migration/               # Inventário, MigrationReport, checklist e scripts da consolidação
+├── migration/               # Inventário, MigrationReport, checklist e scripts da consolidação
+├── performance/             # Relatório de análise de performance dos módulos
+└── release-notes/           # CHANGELOG e notas de release
 templates/                   # Template Excel do ViewBuilder
-Archive/                     # Projetos originais (movidos da raiz) + backups verificados
-├── Auto_ViewTool/           # Projeto original A (intacto, funcional)
-├── SetAtributesToolkit/     # Projeto original B (intacto, com histórico git)
-├── ProjectA/ ProjectB/      # Cópias de backup da ETAPA 2 (verificadas byte a byte)
-└── README.md                # Explica cada item do Archive
 ```
 
 ## Compilação e instalação
