@@ -601,6 +601,18 @@ namespace NavisworksToolkit.Modules.ViewBuilder
             if (ViewLeftCheck.IsChecked == true)  options.Orientations.Add(ViewOrientation.Left);
             if (ViewRightCheck.IsChecked == true) options.Orientations.Add(ViewOrientation.Right);
 
+            // Isométricas superiores
+            if (ViewTopFrontRightCheck.IsChecked == true) options.Orientations.Add(ViewOrientation.TopFrontRight);
+            if (ViewTopFrontLeftCheck.IsChecked == true)  options.Orientations.Add(ViewOrientation.TopFrontLeft);
+            if (ViewTopBackRightCheck.IsChecked == true)  options.Orientations.Add(ViewOrientation.TopBackRight);
+            if (ViewTopBackLeftCheck.IsChecked == true)   options.Orientations.Add(ViewOrientation.TopBackLeft);
+
+            // Isométricas intermediárias
+            if (ViewTopFrontCheck.IsChecked == true) options.Orientations.Add(ViewOrientation.TopFront);
+            if (ViewTopBackCheck.IsChecked == true)  options.Orientations.Add(ViewOrientation.TopBack);
+            if (ViewTopRightCheck.IsChecked == true) options.Orientations.Add(ViewOrientation.TopRight);
+            if (ViewTopLeftCheck.IsChecked == true)  options.Orientations.Add(ViewOrientation.TopLeft);
+
             return options;
         }
 
@@ -614,6 +626,16 @@ namespace NavisworksToolkit.Modules.ViewBuilder
             if (ViewBackCheck?.IsChecked == true)  n++;
             if (ViewLeftCheck?.IsChecked == true)  n++;
             if (ViewRightCheck?.IsChecked == true) n++;
+            // Isométricas superiores
+            if (ViewTopFrontRightCheck?.IsChecked == true) n++;
+            if (ViewTopFrontLeftCheck?.IsChecked == true)  n++;
+            if (ViewTopBackRightCheck?.IsChecked == true)  n++;
+            if (ViewTopBackLeftCheck?.IsChecked == true)   n++;
+            // Isométricas intermediárias
+            if (ViewTopFrontCheck?.IsChecked == true) n++;
+            if (ViewTopBackCheck?.IsChecked == true)  n++;
+            if (ViewTopRightCheck?.IsChecked == true) n++;
+            if (ViewTopLeftCheck?.IsChecked == true)  n++;
             return n;
         }
 

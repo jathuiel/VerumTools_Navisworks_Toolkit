@@ -2,7 +2,7 @@
 <Window x:Class="NavisworksToolkit.Modules.ViewBuilder.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Smart Views" Height="760" Width="820"
+        Title="Smart Views" Height="900" Width="900" 
         MinHeight="560" MinWidth="680"
         WindowStartupLocation="CenterScreen"
         Background="#E5E7EB"
@@ -136,7 +136,7 @@
                     <ControlTemplate TargetType="TextBox">
                         <Border x:Name="bd" CornerRadius="6"
                                 Background="{StaticResource SearchBg}"
-                                BorderBrush="{StaticResource Line}" BorderThickness="1.5">
+                                BorderBrush="{StaticResource Line}" BorderThickness="0.8">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -204,7 +204,7 @@
                     <ControlTemplate TargetType="GridViewColumnHeader">
                         <Border Background="{StaticResource HeaderBg}"
                                 BorderBrush="{StaticResource RowLine}"
-                                BorderThickness="0,0,1,1"
+                                BorderThickness="0,0,0.8,0.8"
                                 Padding="10,8">
                             <ContentPresenter HorizontalAlignment="Left"
                                               VerticalAlignment="Center"/>
@@ -225,7 +225,7 @@
                         <Border x:Name="bd"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{StaticResource RowLine}"
-                                BorderThickness="0,0,0,1"
+                                BorderThickness="0,0,0,0.8"
                                 Padding="2,7">
                             <GridViewRowPresenter VerticalAlignment="Center"/>
                         </Border>
@@ -255,7 +255,7 @@
                     <ControlTemplate TargetType="CheckBox">
                         <Border x:Name="box" Width="18" Height="18" CornerRadius="4"
                                 Background="{StaticResource Card}"
-                                BorderBrush="{StaticResource SlateBorder}" BorderThickness="1.5"
+                                BorderBrush="{StaticResource SlateBorder}" BorderThickness="0.8"
                                 SnapsToDevicePixels="True">
                             <Grid>
                                 <!-- marcado -->
@@ -326,7 +326,7 @@
                     <ControlTemplate TargetType="RadioButton">
                         <StackPanel Orientation="Horizontal" Background="Transparent">
                             <Border x:Name="outer" Width="16" Height="16" CornerRadius="8"
-                                    Background="Transparent" BorderThickness="1.5"
+                                    Background="Transparent" BorderThickness="0.8"
                                     BorderBrush="{StaticResource MutedLight}" VerticalAlignment="Center">
                                 <Ellipse x:Name="dot" Width="8" Height="8"
                                          Fill="{StaticResource Primary}" Visibility="Collapsed"/>
@@ -359,7 +359,7 @@
                     <ControlTemplate TargetType="CheckBox">
                         <StackPanel Orientation="Horizontal" Background="Transparent">
                             <Border x:Name="box" Width="16" Height="16" CornerRadius="4"
-                                    Background="Transparent" BorderThickness="1.5"
+                                    Background="Transparent" BorderThickness="0.8"
                                     BorderBrush="{StaticResource MutedLight}" VerticalAlignment="Center">
                                 <Path x:Name="check" Visibility="Collapsed"
                                       Data="M3,8 L7,12 L13,4"
@@ -397,7 +397,7 @@
 
         <!-- ===================== Header ===================== -->
         <Border Grid.Row="0" Background="{StaticResource Chrome}" Padding="20,14"
-                BorderThickness="0,0,0,1" BorderBrush="{StaticResource Line}">
+                BorderThickness="0,0,0,0.8" BorderBrush="{StaticResource Line}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>  <!-- barra de acento -->
@@ -454,12 +454,15 @@
                 </Grid>
 
                 <Border Grid.Row="2" CornerRadius="8" Background="{StaticResource Card}"
-                        BorderBrush="{StaticResource Line}" BorderThickness="1">
+                        BorderBrush="{StaticResource Line}" BorderThickness="0.8">
                     <ListView x:Name="SelectionSetsList"
                               Background="Transparent" BorderThickness="0"
                               Foreground="{StaticResource Text}" AlternationCount="2"
                               SelectionChanged="SelectionSetsList_SelectionChanged"
-                              ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              ScrollViewer.CanContentScroll="True"
+                              VirtualizingPanel.IsVirtualizing="True"
+                              VirtualizingPanel.VirtualizationMode="Recycling">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Width="40">
@@ -554,6 +557,36 @@
                           Content="Vista lateral direita"
                           Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
 
+                <TextBlock Text="ISOMÉTRICAS SUPERIORES" FontWeight="SemiBold" FontSize="11"
+                           Foreground="{StaticResource MutedLight}" Margin="0,14,0,6"/>
+                <CheckBox x:Name="ViewTopFrontRightCheck" Style="{StaticResource PanelCheck}"
+                          Content="Top Front Right"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+                <CheckBox x:Name="ViewTopFrontLeftCheck" Style="{StaticResource PanelCheck}"
+                          Content="Top Front Left"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+                <CheckBox x:Name="ViewTopBackRightCheck" Style="{StaticResource PanelCheck}"
+                          Content="Top Back Right"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+                <CheckBox x:Name="ViewTopBackLeftCheck" Style="{StaticResource PanelCheck}"
+                          Content="Top Back Left"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+
+                <TextBlock Text="ISOMÉTRICAS INTERMEDIÁRIAS" FontWeight="SemiBold" FontSize="11"
+                           Foreground="{StaticResource MutedLight}" Margin="0,14,0,6"/>
+                <CheckBox x:Name="ViewTopFrontCheck" Style="{StaticResource PanelCheck}"
+                          Content="Top Front"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+                <CheckBox x:Name="ViewTopBackCheck" Style="{StaticResource PanelCheck}"
+                          Content="Top Back"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+                <CheckBox x:Name="ViewTopRightCheck" Style="{StaticResource PanelCheck}"
+                          Content="Top Right"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+                <CheckBox x:Name="ViewTopLeftCheck" Style="{StaticResource PanelCheck}"
+                          Content="Top Left"
+                          Checked="ViewOption_Changed" Unchecked="ViewOption_Changed"/>
+
                 <Border Height="1" Background="{StaticResource Line}" Margin="0,16,0,16"/>
 
                 <!-- ===== Ações ===== -->
@@ -600,7 +633,7 @@
 
         <!-- ===================== Footer ===================== -->
         <Border Grid.Row="2" Background="{StaticResource Chrome}" Padding="20,12"
-                BorderThickness="0,1,0,0" BorderBrush="{StaticResource Line}">
+                BorderThickness="0,0.8,0,0" BorderBrush="{StaticResource Line}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

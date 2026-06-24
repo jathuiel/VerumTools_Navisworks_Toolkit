@@ -38,7 +38,19 @@ namespace NavisworksToolkit.Modules.ViewBuilder
         Front,
         Back,
         Left,
-        Right
+        Right,
+
+        // Isométricas superiores (canto de cima — 3 eixos: cima + frente/trás + direita/esquerda)
+        TopFrontRight,
+        TopFrontLeft,
+        TopBackRight,
+        TopBackLeft,
+
+        // Isométricas intermediárias (vista de cima ao longo de uma direção — 2 eixos: cima + horizontal)
+        TopFront,
+        TopBack,
+        TopRight,
+        TopLeft
     }
 
     /// <summary>
@@ -64,6 +76,19 @@ namespace NavisworksToolkit.Modules.ViewBuilder
                 case ViewOrientation.Back:  return "Traseira";
                 case ViewOrientation.Left:  return "Lateral Esquerda";
                 case ViewOrientation.Right: return "Lateral Direita";
+
+                // Isométricas superiores
+                case ViewOrientation.TopFrontRight: return "Top Front Right";
+                case ViewOrientation.TopFrontLeft:  return "Top Front Left";
+                case ViewOrientation.TopBackRight:  return "Top Back Right";
+                case ViewOrientation.TopBackLeft:   return "Top Back Left";
+
+                // Isométricas intermediárias
+                case ViewOrientation.TopFront: return "Top Front";
+                case ViewOrientation.TopBack:  return "Top Back";
+                case ViewOrientation.TopRight: return "Top Right";
+                case ViewOrientation.TopLeft:  return "Top Left";
+
                 case ViewOrientation.Isometric:
                 default:                    return "Isométrica";
             }

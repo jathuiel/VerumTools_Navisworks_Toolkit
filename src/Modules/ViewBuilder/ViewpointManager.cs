@@ -93,19 +93,15 @@ namespace NavisworksToolkit.Modules.ViewBuilder
                 PerfLog.TimeVoid("ReplaceFromCurrentView", () =>
                 {
                     // Localiza o item recém-adicionado: AddCopy insere no FINAL de Value
-                    // (nível raiz). Iterar do fim garante que pegamos o último com esse
-                    // nome mesmo que já exista um homônimo mais antigo.
-                    SavedViewpoint addedVp = null;
-                    foreach (var item in _document.SavedViewpoints.Value)
-                    {
-                        if (item is SavedViewpoint sv &&
-                            sv.DisplayName == savedViewpoint.DisplayName)
-                            addedVp = sv;
-                    }
-                    if (addedVp != null)
-                        _document.SavedViewpoints.ReplaceFromCurrentView(addedVp);
+                    // (nível raiz), então o último elemento é o que acabamos de inserir —
+                    // acesso O(1) por índice. Evita varrer todos os SavedViewpoints por
+                    // DisplayName a cada criação (que tornava o lote O(n²) no nº de vistas).
+                    var value = _document.SavedViewpoints.Value;
+                    var last = value.Count > 0 ? value[value.Count - 1] as SavedViewpoint : null;
+                    if (last != null && last.DisplayName == savedViewpoint.DisplayName)
+                        _document.SavedViewpoints.ReplaceFromCurrentView(last);
                     else
-                        PerfLog.Info("    ReplaceFromCurrentView: viewpoint não encontrado em Value (pulado)");
+                        PerfLog.Info("    ReplaceFromCurrentView: último item de Value não confere com o esperado (pulado)");
                 });
 
                 // Descrição: a do template tem prioridade; senão, a auto-gerada.
@@ -163,7 +159,7 @@ namespace NavisworksToolkit.Modules.ViewBuilder
         /// A direção de visada (da câmera para a cena) e o "up" da vista são escolhidos por
         /// orientação. Pares opostos (Front/Back, Left/Right) são espelhados.
         /// </summary>
-        private static void ApplyCamera(Viewpoint viewpoint, BoundingBox3D box,
+        private void ApplyCamera(Viewpoint viewpoint, BoundingBox3D box,
             ViewOrientation orientation, CameraProjectionMode projection)
         {
             viewpoint.Projection = projection == CameraProjectionMode.Perspective
@@ -196,6 +192,36 @@ namespace NavisworksToolkit.Modules.ViewBuilder
                     direction = right; viewUp = up; break;
                 case ViewOrientation.Right:
                     direction = right.Negate(); viewUp = up; break;
+
+                // ── Isométricas superiores (canto de cima — câmera nos 3 eixos, olhando p/ dentro) ──
+                // O nome descreve a POSIÇÃO da câmera; a direção de visada é o oposto, normalizado.
+                case ViewOrientation.TopFrontRight:
+                    direction = up.Add(forward).Add(right).Negate().Normalize();
+                    viewUp = up; break;
+                case ViewOrientation.TopFrontLeft:
+                    direction = up.Add(forward).Subtract(right).Negate().Normalize();
+                    viewUp = up; break;
+                case ViewOrientation.TopBackRight:
+                    direction = up.Subtract(forward).Add(right).Negate().Normalize();
+                    viewUp = up; break;
+                case ViewOrientation.TopBackLeft:
+                    direction = up.Subtract(forward).Subtract(right).Negate().Normalize();
+                    viewUp = up; break;
+
+                // ── Isométricas intermediárias (de cima ao longo de uma direção — câmera em 2 eixos) ──
+                case ViewOrientation.TopFront:
+                    direction = up.Add(forward).Negate().Normalize();
+                    viewUp = up; break;
+                case ViewOrientation.TopBack:
+                    direction = up.Subtract(forward).Negate().Normalize();
+                    viewUp = up; break;
+                case ViewOrientation.TopRight:
+                    direction = up.Add(right).Negate().Normalize();
+                    viewUp = up; break;
+                case ViewOrientation.TopLeft:
+                    direction = up.Subtract(right).Negate().Normalize();
+                    viewUp = up; break;
+
                 // Isométrica: câmera no canto (+forward,+right,+up) olhando para dentro da caixa.
                 case ViewOrientation.Isometric:
                 default:
@@ -219,11 +245,29 @@ namespace NavisworksToolkit.Modules.ViewBuilder
                     $"max=({Fmt(box.Max.X)}, {Fmt(box.Max.Y)}, {Fmt(box.Max.Z)})  " +
                     $"size=({Fmt(box.Max.X - box.Min.X)}, {Fmt(box.Max.Y - box.Min.Y)}, {Fmt(box.Max.Z - box.Min.Z)})");
 
+                // Isométrica: enquadra TODO o contexto VISÍVEL do nível (set + ghost do mesmo
+                // Source File), não apenas a bbox do set. GetBoundingBox(ignoreHidden=true) lê só
+                // a geometria visível neste instante — o isolamento já foi aplicado —, então no
+                // modo "Apenas itens do set" (sem contexto) recai naturalmente na bbox do set.
+                var zoomTarget = box;
+                if (orientation == ViewOrientation.Isometric)
+                {
+                    var visible = _document.GetBoundingBox(true);
+                    if (visible != null && !visible.IsEmpty)
+                    {
+                        zoomTarget = visible;
+                        PerfLog.Info(
+                            $"    isométrica: enquadrando contexto visível  " +
+                            $"min=({Fmt(visible.Min.X)}, {Fmt(visible.Min.Y)}, {Fmt(visible.Min.Z)})  " +
+                            $"max=({Fmt(visible.Max.X)}, {Fmt(visible.Max.Y)}, {Fmt(visible.Max.Z)})");
+                    }
+                }
+
                 // ZoomBox reposiciona a câmera ao longo da direção isométrica olhando para ESTE
                 // centro e ajusta os extents para enquadrar a caixa — instantâneo, sem animação.
                 // (Não usamos PointAt(center): ele sobrescreveria a direção isométrica recém-
                 //  definida, apontando da posição atual da câmera para o centro.)
-                viewpoint.ZoomBox(box);
+                viewpoint.ZoomBox(zoomTarget);
             }
         }
 
