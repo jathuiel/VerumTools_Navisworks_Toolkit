@@ -72,7 +72,7 @@
         <Setter Property="Background"          Value="{StaticResource Slate}"/>
         <Setter Property="Foreground"          Value="{StaticResource Text}"/>
         <Setter Property="BorderBrush"         Value="{StaticResource SlateBorder}"/>
-        <Setter Property="BorderThickness"     Value="1"/>
+        <Setter Property="BorderThickness"     Value="0.8"/>
         <Setter Property="Padding"             Value="12,9"/>
         <Setter Property="FontSize"            Value="13"/>
         <Setter Property="FontWeight"          Value="SemiBold"/>
@@ -188,7 +188,7 @@
         <Setter Property="Background"      Value="{StaticResource SearchBg}"/>
         <Setter Property="Foreground"      Value="{StaticResource Text}"/>
         <Setter Property="BorderBrush"     Value="{StaticResource Line}"/>
-        <Setter Property="BorderThickness" Value="1.5"/>
+        <Setter Property="BorderThickness" Value="0.8"/>
         <Setter Property="Height"          Value="34"/>
         <Setter Property="Padding"         Value="8,5"/>
         <Setter Property="FontSize"        Value="13"/>
@@ -281,14 +281,14 @@
         <Setter Property="FontSize"        Value="11"/>
         <Setter Property="Padding"         Value="8,5"/>
         <Setter Property="BorderBrush"     Value="{StaticResource Line}"/>
-        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        <Setter Property="BorderThickness" Value="0,0,0.8,0.8"/>
     </Style>
 
     <Style x:Key="DarkDataGridRow" TargetType="DataGridRow">
         <Setter Property="Background"      Value="Transparent"/>
         <Setter Property="Foreground"      Value="{StaticResource Text}"/>
         <Setter Property="BorderBrush"     Value="{StaticResource RowLine}"/>
-        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="BorderThickness" Value="0,0,0,0.8"/>
         <Style.Triggers>
             <Trigger Property="AlternationIndex" Value="1">
                 <Setter Property="Background" Value="{StaticResource RowAlt}"/>
@@ -328,7 +328,7 @@
                         <Border x:Name="Bg"
                                 Background="{StaticResource SearchBg}"
                                 BorderBrush="{StaticResource SlateBorder}"
-                                BorderThickness="1.5"
+                                BorderThickness="0.8"
                                 CornerRadius="4"
                                 SnapsToDevicePixels="True"/>
                         <Path x:Name="Check"
@@ -381,7 +381,7 @@
                 <ControlTemplate TargetType="TextBox">
                     <Border x:Name="bd" CornerRadius="6"
                             Background="{StaticResource SearchBg}"
-                            BorderBrush="{StaticResource Line}" BorderThickness="1.5">
+                            BorderBrush="{StaticResource Line}" BorderThickness="0.8">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -451,7 +451,7 @@
                 <ControlTemplate TargetType="GridViewColumnHeader">
                     <Border Background="{StaticResource HeaderBg}"
                             BorderBrush="{StaticResource Line}"
-                            BorderThickness="0,0,1,1" Padding="10,8">
+                            BorderThickness="0,0,0.8,0.8" Padding="10,8">
                         <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     </Border>
                 </ControlTemplate>
@@ -467,7 +467,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
                     <Border x:Name="bd" Background="{TemplateBinding Background}"
-                            BorderBrush="{StaticResource RowLine}" BorderThickness="0,0,0,1"
+                            BorderBrush="{StaticResource RowLine}" BorderThickness="0,0,0,0.8"
                             Padding="2,7">
                         <GridViewRowPresenter VerticalAlignment="Center"/>
                     </Border>

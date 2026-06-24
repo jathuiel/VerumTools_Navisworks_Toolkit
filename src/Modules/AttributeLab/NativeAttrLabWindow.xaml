@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:NavisworksToolkit.Modules.AttributeLab"
         Title="Property Explorer"
-        Width="1080" Height="760"
+        Width="1360" Height="1000"
         MinWidth="900" MinHeight="560"
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="True"
@@ -31,7 +31,7 @@
         <Border Grid.Row="0"
                 Background="{StaticResource Chrome}"
                 BorderBrush="{StaticResource Line}"
-                BorderThickness="0,0,0,1"
+                BorderThickness="0,0,0,0.8"
                 Padding="20,14">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -68,7 +68,7 @@
             <Border Grid.Column="0"
                     Background="{StaticResource Card}"
                     BorderBrush="{StaticResource Line}"
-                    BorderThickness="0,0,1,0">
+                    BorderThickness="0,0,0.8,0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -79,7 +79,7 @@
                     <Border Grid.Row="0"
                             Background="{StaticResource HeaderBg}"
                             BorderBrush="{StaticResource RowLine}"
-                            BorderThickness="0,0,0,1"
+                            BorderThickness="0,0,0,0.8"
                             Padding="12,10">
                         <StackPanel>
                             <TextBlock Text="ATRIBUTOS NATIVOS"
@@ -95,7 +95,10 @@
                               Background="Transparent"
                               BorderThickness="0"
                               Padding="6"
-                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              ScrollViewer.CanContentScroll="True"
+                              VirtualizingPanel.IsVirtualizing="True"
+                              VirtualizingPanel.VirtualizationMode="Recycling">
                         <TreeView.ItemContainerStyle>
                             <Style TargetType="TreeViewItem">
                                 <Setter Property="IsExpanded" Value="False"/>
@@ -165,7 +168,7 @@
                     <Border Grid.Row="0"
                             Background="{StaticResource Card}"
                             BorderBrush="{StaticResource Line}"
-                            BorderThickness="1"
+                            BorderThickness="0.8"
                             CornerRadius="6"
                             Padding="14,12"
                             Margin="0,0,0,12">
@@ -203,7 +206,7 @@
                     <Border Grid.Row="1"
                             Background="{StaticResource Card}"
                             BorderBrush="{StaticResource Line}"
-                            BorderThickness="1"
+                            BorderThickness="0.8"
                             CornerRadius="6"
                             Padding="14,12"
                             Margin="0,0,0,12">
@@ -240,7 +243,7 @@
                     <Border Grid.Row="2"
                             Background="{StaticResource Card}"
                             BorderBrush="{StaticResource Line}"
-                            BorderThickness="1"
+                            BorderThickness="0.8"
                             CornerRadius="6"
                             Padding="14,12"
                             Margin="0,0,0,12"
@@ -291,11 +294,14 @@
                             <DataGrid x:Name="SelectionSetsGrid" Grid.Row="2"
                                       AutoGenerateColumns="False"
                                       CanUserAddRows="False" CanUserDeleteRows="False"
+                                      EnableRowVirtualization="True"
+                                      VirtualizingPanel.IsVirtualizing="True"
+                                      VirtualizingPanel.VirtualizationMode="Recycling"
                                       IsReadOnly="False"
                                       SelectionMode="Single"
                                       HeadersVisibility="Column"
                                       GridLinesVisibility="None"
-                                      BorderThickness="1"
+                                      BorderThickness="0.8"
                                       BorderBrush="{StaticResource Line}"
                                       Background="Transparent"
                                       RowBackground="Transparent"
@@ -333,12 +339,15 @@
                         <Border Grid.Row="1"
                                 Background="{StaticResource Card}"
                                 BorderBrush="{StaticResource Line}"
-                                BorderThickness="1"
+                                BorderThickness="0.8"
                                 CornerRadius="6"
                                 Padding="1">
                             <DataGrid x:Name="LabGrid"
                                       AutoGenerateColumns="False"
                                       CanUserAddRows="False" CanUserDeleteRows="False"
+                                      EnableRowVirtualization="True"
+                                      VirtualizingPanel.IsVirtualizing="True"
+                                      VirtualizingPanel.VirtualizationMode="Recycling"
                                       IsReadOnly="False" SelectionUnit="CellOrRowHeader"
                                       PreparingCellForEdit="LabGrid_PreparingCellForEdit"
                                       Background="{StaticResource Card}"
@@ -362,7 +371,7 @@
                                                 <ComboBox SelectedValue="{Binding Type, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                           SelectedValuePath="Content"
                                                           Foreground="{StaticResource Text}"
-                                                          BorderThickness="1"
+                                                          BorderThickness="0.8"
                                                           BorderBrush="{StaticResource Line}"
                                                           Background="{StaticResource Card}"
                                                           Padding="6,3"
@@ -439,7 +448,7 @@
                     <Border Grid.Row="5"
                             Background="{StaticResource Card}"
                             BorderBrush="{StaticResource Line}"
-                            BorderThickness="1"
+                            BorderThickness="0.8"
                             CornerRadius="6">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -450,7 +459,7 @@
                             <Border Grid.Row="0"
                                     Background="{StaticResource HeaderBg}"
                                     BorderBrush="{StaticResource RowLine}"
-                                    BorderThickness="0,0,0,1"
+                                    BorderThickness="0,0,0,0.8"
                                     Padding="12,8">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontSize="11" FontWeight="SemiBold">
@@ -488,7 +497,7 @@
         <Border Grid.Row="2"
                 Background="{StaticResource Chrome}"
                 BorderBrush="{StaticResource Line}"
-                BorderThickness="0,1,0,0"
+                BorderThickness="0,0.8,0,0"
                 Padding="20,10">
             <DockPanel LastChildFill="False">
                 <Ellipse DockPanel.Dock="Left" Width="8" Height="8"
