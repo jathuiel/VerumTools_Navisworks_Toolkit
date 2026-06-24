@@ -2,6 +2,20 @@
 
 Histórico consolidado da plataforma. Versões anteriores à consolidação referem-se aos projetos de origem.
 
+## [1.1.0] — 2026-06-24 — Novas vistas isométricas e enquadramento de contexto
+
+Evolução funcional do **Smart Views**: oito novas orientações isométricas por Selection Set e enquadramento do contexto do nível na vista Isométrica, além de um refinamento de acabamento na UI.
+
+### Adicionado
+- **Smart Views — 8 novas orientações isométricas**, somadas às existentes (Isométrica, Topo, Frente, Trás, Esquerda, Direita); cada uma gera um viewpoint independente por set:
+  - **Isométricas superiores** (canto de cima, 3 eixos): `Top Front Right`, `Top Front Left`, `Top Back Right`, `Top Back Left`.
+  - **Isométricas intermediárias** (de cima ao longo de uma direção, 2 eixos): `Top Front`, `Top Back`, `Top Right`, `Top Left`.
+  - Painel com dois grupos rotulados (**ISOMÉTRICAS SUPERIORES** / **ISOMÉTRICAS INTERMEDIÁRIAS**). Eixos derivados do *world-up* (Z-up ou Y-up); o nome indica a posição da câmera, que olha para o centro da bbox. Novos valores em `ViewOrientation` + rótulos em `ViewGenerationOptions.LabelOf`; câmera em `ViewpointManager.ApplyCamera`; checkboxes em `MainWindow.xaml`/`.xaml.cs`.
+
+### Alterado
+- **Vista Isométrica — enquadramento do contexto do nível**: passa a enquadrar toda a geometria **visível** após o isolamento (set + *ghosting* do mesmo Source File) via `_document.GetBoundingBox(true)` em `ViewpointManager.ApplyCamera`, em vez de cortar justo no set. No modo `Apenas itens do set` recai na bbox do set (só ele visível). Demais vistas inalteradas.
+- **Bordas afinadas para 0.8px** (*hairline*) no tema `DesignSystem.xaml` e nas 6 janelas: botões secundários, campos, *combo boxes*, caixas de busca e divisores de `DataGrid`/`GridView`/`ListView`. Sem mudança de cor ou layout.
+
 ## [1.0.1] — 2026-06-15 — Identidade visual: tema claro e ícones azuis
 
 Repaginação visual da suíte para o **tema claro corporativo**, aplicada de forma consistente nas 6 janelas.
