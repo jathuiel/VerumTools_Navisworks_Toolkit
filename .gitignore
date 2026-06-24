@@ -12,3 +12,6 @@ src/obj/
 
 # Archive dos projetos originais (backups, não código ativo)
 Archive/
+
+# Prompts/artefatos de desenvolvimento (scratch, não fazem parte do produto)
+Prompt Análise de Performance.md
